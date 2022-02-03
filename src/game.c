@@ -2,7 +2,8 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 #include "simple_logger.h"
-
+#include "gfc_vector.h"
+#include "entity.h"
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
@@ -28,9 +29,16 @@ int main(int argc, char * argv[])
         0);
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
+    entity_manager_init(1024);
     SDL_ShowCursor(SDL_DISABLE);
-    
+    Entity *random = entity_new();
+    random->position = vector2d(90,90);
+    random->velocity = vector2d(4,4);
+    random->rotation = vector3d(43,43,25);
+
     /*demo setup*/
+    Sprite *bug_sprite = gf2d_sprite_load_image("images/space_bug.png");
+    random->sprite = bug_sprite;
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
     /*main game loop*/
