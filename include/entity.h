@@ -53,3 +53,5 @@ void entity_draw_all();
 
 void entity_draw(Entity *ent);
 
+void entity_manager_draw_entities();
+

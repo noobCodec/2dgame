@@ -129,12 +129,13 @@ void entity_draw(Entity *ent)
     {
         if (ent->sprite == NULL)
         {
+		slog("nothing to draw for some reason");
             return;// nothing to draw
         }
         gf2d_sprite_draw(
             ent->sprite,
             ent->position,
-            vector2d(5,5),
+            NULL,
             NULL,
             NULL,
             NULL,
