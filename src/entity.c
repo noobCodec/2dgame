@@ -132,6 +132,7 @@ void entity_draw(Entity *ent)
 		slog("nothing to draw for some reason");
             return;// nothing to draw
         }
+        slog("drawing");
         gf2d_sprite_draw(
             ent->sprite,
             ent->position,
@@ -142,6 +143,8 @@ void entity_draw(Entity *ent)
             NULL,
             (Uint32)ent->frame);
     }
+    ent->frame +=0.1;
+    if(ent->frame >=16) ent->frame = 0;
 }
 
 

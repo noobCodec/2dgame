@@ -33,9 +33,9 @@ int main(int argc, char * argv[])
     SDL_ShowCursor(SDL_DISABLE);
     Entity *random = entity_new();
     random->position = vector2d(180,180);
-
+    random->frame = 0;
     /*demo setup*/
-    Sprite *bug_sprite = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+    Sprite *bug_sprite = gf2d_sprite_load_all("images/space_bug.png",128,128,16);
     random->sprite = bug_sprite;
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
@@ -54,6 +54,7 @@ int main(int argc, char * argv[])
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
+            //entity_manager_update_entities();
             entity_manager_draw_entities();
             //UI elements last
             gf2d_sprite_draw(
@@ -68,7 +69,7 @@ int main(int argc, char * argv[])
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-        slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+        //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     slog("---==== END ====---");
     return 0;

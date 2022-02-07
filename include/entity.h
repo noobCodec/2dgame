@@ -55,3 +55,7 @@ void entity_draw(Entity *ent);
 
 void entity_manager_draw_entities();
 
+void entity_manager_update_entities();
+
+void entity_draw(Entity *ent);
+
