@@ -50,8 +50,29 @@ void entity_update(Entity *self)
     vector2d_add(self->position,self->position,self->velocity);
     self->frame += self->frameRate;
     if (self->frame >= self->frameCount)self->frame = 0;
+    // SPECIFIC ENTITY UPDATE CODE
+    if(self->update){
+      self->update(self);
+    }
 }
 
+void bug_update(Entity *self){
+  int mx,my;
+  if(!self) return;
+  SDL_GetMouseState(&mx,&my);
+  vector2d_sub(self->velocity,vector2d(mx,my),self->position);
+  vector2d_scale(self->velocity,self->velocity,0.01);
+}
+void kill_time(){
+  int i;
+  for(i = 0; i< entity_manager.max_entities;i++){
+    if(entity_manager.entity_list[i]._inuse){
+      entity_free(&entity_manager.entity_list[i]);
+      break;
+    }
+  }
+}
+      
 void entity_manager_update_entities()
 {
     int i;
@@ -132,7 +153,6 @@ void entity_draw(Entity *ent)
 		slog("nothing to draw for some reason");
             return;// nothing to draw
         }
-        slog("drawing");
         gf2d_sprite_draw(
             ent->sprite,
             ent->position,
@@ -143,8 +163,6 @@ void entity_draw(Entity *ent)
             NULL,
             (Uint32)ent->frame);
     }
-    ent->frame +=0.1;
-    if(ent->frame >=16) ent->frame = 0;
 }
 
 

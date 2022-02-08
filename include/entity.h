@@ -10,13 +10,14 @@ typedef struct Entity_s
     float       frame;
     float       frameRate;
     int         frameCount;
+    int 	action; // tmp remove when actors
     void      (*update)(struct Entity_s *self);
     void      (*think)(struct Entity_s *self);
     void      (*draw)(struct Entity_s *self);
     void      (*free)(struct Entity_s *self);
     void       *data;
 }Entity;
-
+void kill_time();
 /**
  * @brief get a pointer to a new entity
  * @return NULL on out of memory or error, a pointer to a blank entity otherwise
@@ -59,3 +60,4 @@ void entity_manager_update_entities();
 
 void entity_draw(Entity *ent);
 
+void bug_update(Entity *self);
