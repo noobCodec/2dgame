@@ -1,170 +1,139 @@
-#include <stdlib.h>
-#include "simple_logger.h"
 
+#include "simple_logger.h"
 #include "entity.h"
-#include "gfc_vector.h"
 typedef struct
 {
-    Entity *entity_list;
-    Uint32  max_entities;
+    Uint32 max_entities;            /**<how many entities exist*/
+    Entity  *entity_list;           /**<a big ole list of entities*/
 }EntityManager;
 
 static EntityManager entity_manager = {0};
+
+
+void entity_manager_close()
+{
+    entity_manager_clear(); // clear all entities first
+    if(entity_manager.entity_list != NULL)
+    {
+        free(entity_manager.entity_list);
+    }
+    slog("entity manager closed");    
+}
 
 void entity_manager_init(Uint32 max_entities)
 {
     if (max_entities == 0)
     {
-        slog("cannot allocate 0 entities!");
+        slog("cannot allocate memory for zero entities!");
         return;
     }
     if (entity_manager.entity_list != NULL)
     {
-        entity_manager_free();
-    }
-    entity_manager.entity_list = (Entity *)gfc_allocate_array(sizeof (Entity),max_entities);
-    if (entity_manager.entity_list == NULL)
-    {
-        slog("failed to allocate entity list!");
+        slog("entity manager already initialized");
         return;
     }
     entity_manager.max_entities = max_entities;
-    atexit(entity_manager_free);
-    slog("entity system initialized");
+    entity_manager.entity_list = gfc_allocate_array(sizeof(Entity),max_entities);
+    atexit(entity_manager_close);
+    slog("entity manager initialized");
 }
 
-void entity_manager_free()
-{
-    if (entity_manager.entity_list != NULL)
-    {
-        free(entity_manager.entity_list);
-    }
-    memset(&entity_manager,0,sizeof(EntityManager));
-    slog("entity system closed");
-}
-
-void entity_update(Entity *self)
-{
-    if (!self)return;
-    // DO ANY GENERIC UPDATE CODE
-    vector2d_add(self->position,self->position,self->velocity);
-    self->frame += self->frameRate;
-    if (self->frame >= self->frameCount)self->frame = 0;
-    // SPECIFIC ENTITY UPDATE CODE
-    if(self->update){
-      self->update(self);
-    }
-}
-
-void bug_update(Entity *self){
-  int mx,my;
-  if(!self) return;
-  SDL_GetMouseState(&mx,&my);
-  vector2d_sub(self->velocity,vector2d(mx,my),self->position);
-  vector2d_scale(self->velocity,self->velocity,0.01);
-}
-void kill_time(){
-  int i;
-  for(i = 0; i< entity_manager.max_entities;i++){
-    if(entity_manager.entity_list[i]._inuse){
-      entity_free(&entity_manager.entity_list[i]);
-      break;
-    }
-  }
-}
-      
-void entity_manager_update_entities()
+void entity_manager_clear()
 {
     int i;
-    if (entity_manager.entity_list == NULL)
+    for (i = 0;i < entity_manager.max_entities;i++)
     {
-        slog("entity system does not exist");
-        return;
-    }
-    for (i = 0; i < entity_manager.max_entities; i++)
-    {
-        if (entity_manager.entity_list[i]._inuse == 0)continue;
-        entity_update(&entity_manager.entity_list[i]);
+        if (!entity_manager.entity_list[i]._inuse)continue;
+        entity_free(&entity_manager.entity_list[i]);
     }
 }
-
-void entity_manager_draw_entities()
-{
-    int i;
-    if (entity_manager.entity_list == NULL)
-    {
-        slog("entity system does not exist");
-        return;
-    }
-    for (i = 0; i < entity_manager.max_entities; i++)
-    {
-        if (entity_manager.entity_list[i]._inuse == 0)continue;
-        entity_draw(&entity_manager.entity_list[i]);
-    }
-}
-
 
 Entity *entity_new()
 {
     int i;
-    if (entity_manager.entity_list == NULL)
-    {
-        slog("entity system does not exist");
-        return NULL;
-    }
     for (i = 0;i < entity_manager.max_entities;i++)
     {
-        if (entity_manager.entity_list[i]._inuse)continue;// someone else is using this one
-        memset(&entity_manager.entity_list[i],0,sizeof(Entity));
-        entity_manager.entity_list[i]._inuse = 1;
-        return &entity_manager.entity_list[i];
+        if (!entity_manager.entity_list[i]._inuse)
+        {
+            //GOT ONE!
+            entity_manager.entity_list[i]._inuse = 1;
+            entity_manager.entity_list[i].draw_scale.x = 1;
+            entity_manager.entity_list[i].draw_scale.y = 1;
+            return &entity_manager.entity_list[i];
+        }
     }
-    slog("no free entities available");
+    slog("out of entities");
     return NULL;
 }
 
-void entity_free(Entity *ent)
+void entity_think(Entity *ent)
 {
-    if (!ent)
+    if (!ent)return;
+    //generic upkeep
+    
+    if (ent->think)
     {
-        slog("cannot free a NULL entity");
-        return;
+        ent->think(ent);
     }
-    gf2d_sprite_free(ent->sprite);
-    ent->sprite = NULL;
-    ent->_inuse = 0;
+    
+    vector2d_add(ent->position,ent->position,ent->velocity);
 }
 
-void entity_draw(Entity *ent)
+void entity_manager_think_all()
 {
-    if (!ent)
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
     {
-        slog("cannot draww a NULL entity");
-        return;
-    }
-    if (ent->draw)
-    {
-        ent->draw(ent);
-    }
-    else
-    {
-        if (ent->sprite == NULL)
-        {
-		slog("nothing to draw for some reason");
-            return;// nothing to draw
-        }
-        gf2d_sprite_draw(
-            ent->sprite,
-            ent->position,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            (Uint32)ent->frame);
+        if (!entity_manager.entity_list[i]._inuse)continue;
+        entity_think(&entity_manager.entity_list[i]);
     }
 }
 
+void entity_manager_draw_all()
+{
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
+    {
+        if (!entity_manager.entity_list[i]._inuse)continue;
+        entity_draw(&entity_manager.entity_list[i]);
+    }
+}
+
+void entity_draw(Entity *entity)
+{
+    Vector2D drawPosition;
+    if (entity == NULL)
+    {
+        slog("null pointer provided, nothing to do!");
+        return;
+    }
+    if (entity->sprite == NULL)return;// nothing to draw
+    vector2d_add(drawPosition,entity->position,entity->draw_offset);
+    gf2d_sprite_draw(
+        entity->sprite,        
+        drawPosition,
+        &entity->draw_scale,
+        NULL,
+        &entity->rotation,
+        NULL,
+        NULL,
+        (Uint32)entity->frame);
+}
+
+void entity_free(Entity *entity)
+{
+    if (entity == NULL)
+    {
+        slog("null pointer provided, nothing to do!");
+        return;
+    }
+    if (entity->sprite != NULL)
+    {
+        gf2d_sprite_free(entity->sprite);
+    }
+    memset(entity,0,sizeof(Entity));
+}
 
 
-/*eol@eof*/
+
+// eof

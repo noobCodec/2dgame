@@ -1,63 +1,64 @@
+#ifndef __ENTITY_H__
+#define __ENTITY_H__
+
+#include <SDL.h>
 #include "gf2d_sprite.h"
 
-typedef struct Entity_s
+typedef struct ENTITY_S
 {
-    Bool       _inuse;
-    Vector2D    position;
-    Vector2D    velocity;
-    Vector3D    rotation; //(x,y) = rotation center, z = degrees of rotation
-    Sprite     *sprite; 
-    float       frame;
-    float       frameRate;
-    int         frameCount;
-    int 	action; // tmp remove when actors
-    void      (*update)(struct Entity_s *self);
-    void      (*think)(struct Entity_s *self);
-    void      (*draw)(struct Entity_s *self);
-    void      (*free)(struct Entity_s *self);
-    void       *data;
+    Uint8       _inuse;     /**<this flag keeps track if this entity is active or free to reassign*/
+    Sprite     *sprite;     /**<sprite used to draw the sprite*/
+    float       frame;      /**<current frame to draw*/
+    Vector2D    draw_offset;/**<draw position relative to the entity position*/
+    Vector2D    position;   /**<where our entity lives*/
+    Vector2D    velocity;   /**<how our entity moves*/
+    Vector3D    rotation;   /**<how to rotate the sprite*/
+    Vector2D    draw_scale;  /**<the scale factor for drawing the sprite*/
+    Vector2D    mins,maxs;  /**<describe the bounding box around this entity*/
+    void (*think)(struct ENTITY_S *self);   /**<a pointer to a think function for this entity*/
 }Entity;
-void kill_time();
+
+
 /**
- * @brief get a pointer to a new entity
- * @return NULL on out of memory or error, a pointer to a blank entity otherwise
+ * @brief initialize the internal entity entity_manager_init
+ * @note must be called before other entity functions
+ * @param max_entities how many concurrent entities will be supported
+ */
+void entity_manager_init(Uint32 max_entities);
+
+/**
+ * @brief draws all active entities to the screen
+ */
+void entity_manager_draw_all();
+
+/**
+ * @brief runs any think function for all active entities
+ */
+void entity_manager_think_all();
+
+
+/**
+ * @brief free all active entities
+ * @note for use in level transitions.
+ */
+void entity_manager_clear();
+
+/**
+ * @brief get a new empty entity
+ * @returns NULL on error, or a pointer to a blank entity
  */
 Entity *entity_new();
 
 /**
- * @brief initialize the entity resource manager
- * @param maxEnts upper bound of maximum concurrent entities to be supported
- * @note must be called before creating a new entity
+ * @brief draws the given entity
+ * @param entity the entity to draw
  */
-void entity_manager_init(Uint32 maxEnts);
-
+void entity_draw(Entity *entity);
 
 /**
- * @brief free all entities in the system and destroy entity manager
+ * @brief free the memory of an entity
+ * @param entity the entity to free
  */
-void entity_manager_free();
+void entity_free(Entity *entity);
 
-/**
- * @brief free a previously allocated entity
- * @param self a pointer to the entity to free
- */
-void entity_free(Entity *self);
-
-/**
- * @brief update every active entity
- */
-void entity_update_all();
-/**
- * @brief draww every active entity
- */
-void entity_draw_all();
-
-void entity_draw(Entity *ent);
-
-void entity_manager_draw_entities();
-
-void entity_manager_update_entities();
-
-void entity_draw(Entity *ent);
-
-void bug_update(Entity *self);
+#endif

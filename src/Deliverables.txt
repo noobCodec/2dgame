@@ -1,0 +1,19 @@
+5 different units to control
+
+5 world features to impact gameplay
+
+AI to control enemy team
+
+Unit AI to follow basic orders and path find
+
+Basic buildings and resource gathering
+
+Functioning Entity System
+
+Fully interactable environment
+
+User Interface (HUD, Stats, Messages, menus)
+
+File read / write access (high score list, saved games, saved songs, etc)
+
+README for how to play and see all game features (this should be in the git repo)

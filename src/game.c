@@ -1,21 +1,67 @@
 #include <SDL.h>
+
+#include "simple_logger.h"
+
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
-#include "simple_logger.h"
-#include "gfc_vector.h"
+#include <stdio.h>
 #include "entity.h"
+#include "bug_ent.h"
+#include "tile_map.h"
+#include "path_map.h"
+#include "pathfinder.h"
 int main(int argc, char * argv[])
 {
-    /*variable declarations*/
+init_logger("gf2d.log");
+slog("hello world -->");
+/*
+int tmp[240] = {
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int visited[240] = {
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+Queue *ret = BFS(tmp,visited,0,0,4,4);
+while(!isEmpty(ret))
+{
+	Vector2D *ligma= pop(ret);
+	slog("x:%f,y:%f",ligma->x,ligma->y);
+}
+
+killqueue(ret);
+*/
+
     int done = 0;
     const Uint8 * keys;
     Sprite *sprite;
-    int blocked = 1;
+    
     int mx,my;
     float mf = 0;
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
-    /*program initializtion*/
+    TileMap *tilemap;
+    
     init_logger("gf2d.log");
     slog("---==== BEGIN ====---");
     gf2d_graphics_initialize(
@@ -28,19 +74,17 @@ int main(int argc, char * argv[])
         0);
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
+    tile_set_manager_init(16);
     entity_manager_init(1024);
     SDL_ShowCursor(SDL_DISABLE);
-    Entity *random = entity_new();
-    random->position = vector2d(180,180);
-    random->frame = 0;
-    random->frameCount = 16;
-    random->frameRate = 0.1;
-    /*demo setup*/
-    Sprite *bug_sprite = gf2d_sprite_load_all("images/space_bug.png",128,128,16);
-    random->sprite = bug_sprite;
-    random->update = bug_update;
+    
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+    bug_ent_new(vector2d(90,30));
+    tilemap = tilemap_load("level/test.json");
+	Path_Map *path = Path_Map_load("level/test.json");
+	path_manager_init(12);
+	//Path_Map_debug(path);
     /*main game loop*/
     while(!done)
     {
@@ -50,48 +94,15 @@ int main(int argc, char * argv[])
         SDL_GetMouseState(&mx,&my);
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
-        if(keys[SDL_SCANCODE_C]&& blocked){
-	  random = entity_new();
-	  random->position = vector2d(180,180);
-	  random->sprite = bug_sprite;
-	  random->update = bug_update;
-	  random->velocity = vector2d(0,0);
-	  random->frame=0;
-	  random->frameCount = 16;
-	  random->frameRate = 0.1;
-	  blocked = 0;
-	}
-	else if(keys[SDL_SCANCODE_C]==0){
-	  blocked = 1;
-	}
-        if(keys[SDL_SCANCODE_F] && random){
-	  kill_time();
-	}
-	if(keys[SDL_SCANCODE_W] && random){
-	  vector2d_add(random->velocity,vector2d(0,0),vector2d(0,-2));
-	}
-	if(keys[SDL_SCANCODE_A] && random){
-	  vector2d_add(random->velocity,vector2d(0,0),vector2d(-2,0));
-	}
-	if(keys[SDL_SCANCODE_D] && random){
-	  vector2d_add(random->velocity,vector2d(0,0),vector2d(2,0));
-	}
-	if(keys[SDL_SCANCODE_S] && random){
-	  vector2d_add(random->velocity,vector2d(0,0),vector2d(0,2));
-	}
-	if(keys[SDL_SCANCODE_G] && random){
-	  vector2d_sub(random->velocity,vector2d(mx,my),random->position);
-	  vector2d_scale(random->velocity,random->velocity,0.05);
-	}
-	else if(random && (random->position.x >= 1150 || random->position.x <= 0 || random->position.y >= 650 || random->position.y <= 0 )){
-	  random->velocity = vector2d(0,0);
-	}
+        entity_manager_think_all();
+        
         gf2d_graphics_clear_screen();// clears drawing buffers
-        // all drawing should happen betweem clear_ssrcreen and next_frame
+        // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
-            entity_manager_update_entities();
-            entity_manager_draw_entities();
+            // draw other game elements
+            tilemap_draw(tilemap);
+            entity_manager_draw_all();
             //UI elements last
             gf2d_sprite_draw(
                 mouse,
@@ -105,8 +116,9 @@ int main(int argc, char * argv[])
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-        //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+       // slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
+    Path_Map_free(path);
     slog("---==== END ====---");
     return 0;
 }
