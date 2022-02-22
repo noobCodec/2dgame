@@ -134,6 +134,21 @@ void entity_free(Entity *entity)
     memset(entity,0,sizeof(Entity));
 }
 
-
+List* entity_click(int mx, int my)
+{
+    List* touched = gfc_list_new();
+    ShapeRect tmp = shape_rect_from_vector4d(vector4d(mx-5,my-5,10,10));
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
+    {
+        if (!entity_manager.entity_list[i]._inuse)continue;
+        if ((&entity_manager.entity_list[i].bounding)==NULL)continue;
+        if(shape_rect_collision(tmp,entity_manager.entity_list[i].bounding))
+        {
+        	touched = gfc_list_append(touched,&entity_manager.entity_list[i]);
+        }
+    }
+    return touched;
+}
 
 // eof

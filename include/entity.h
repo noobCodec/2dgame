@@ -3,10 +3,13 @@
 
 #include <SDL.h>
 #include "gf2d_sprite.h"
+#include "gfc_list.h"
+#include "shape.h"
 
 typedef struct ENTITY_S
 {
     Uint8       _inuse;     /**<this flag keeps track if this entity is active or free to reassign*/
+    Uint8       clicked;
     Sprite     *sprite;     /**<sprite used to draw the sprite*/
     float       frame;      /**<current frame to draw*/
     Vector2D    draw_offset;/**<draw position relative to the entity position*/
@@ -14,7 +17,7 @@ typedef struct ENTITY_S
     Vector2D    velocity;   /**<how our entity moves*/
     Vector3D    rotation;   /**<how to rotate the sprite*/
     Vector2D    draw_scale;  /**<the scale factor for drawing the sprite*/
-    Vector2D    mins,maxs;  /**<describe the bounding box around this entity*/
+    ShapeRect    bounding;  /**<describe the bounding box around this entity*/
     void (*think)(struct ENTITY_S *self);   /**<a pointer to a think function for this entity*/
 }Entity;
 
@@ -60,5 +63,7 @@ void entity_draw(Entity *entity);
  * @param entity the entity to free
  */
 void entity_free(Entity *entity);
+
+List* entity_click(int mx, int my);
 
 #endif

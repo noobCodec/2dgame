@@ -17,5 +17,5 @@ typedef struct
 TileMap *tilemap_load(char *filename);
 void tilemap_free(TileMap *map);
 void tilemap_draw(TileMap *map);
-
+void tilemap_update(TileMap *map);
 #endif
