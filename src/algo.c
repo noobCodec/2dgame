@@ -36,7 +36,6 @@ List* backtrack(Point *x)
 List* BFS(int *grid,int *visited,int row,int col,int goal_row, int goal_col,int col_size,int row_size)
 {
 	List *q = gfc_list_new();
-	
 	List *tobefreed = gfc_list_new();
 	int length = row_size;
 	Point *ptr = init_point(row,col);

@@ -5,11 +5,15 @@
 #include "gf2d_sprite.h"
 #include "gfc_list.h"
 #include "shape.h"
+#include "pathfinder.h"
+#include "gfc_types.h"
+#include "gf2d_draw.h"
 
 typedef struct ENTITY_S
 {
     Uint8       _inuse;     /**<this flag keeps track if this entity is active or free to reassign*/
-    Uint8       clicked;
+    Uint8		health;
+    Uint8		damage;
     Sprite     *sprite;     /**<sprite used to draw the sprite*/
     float       frame;      /**<current frame to draw*/
     Vector2D    draw_offset;/**<draw position relative to the entity position*/
@@ -17,6 +21,8 @@ typedef struct ENTITY_S
     Vector2D    velocity;   /**<how our entity moves*/
     Vector3D    rotation;   /**<how to rotate the sprite*/
     Vector2D    draw_scale;  /**<the scale factor for drawing the sprite*/
+    Path *path;
+    ShapeCircle  range;
     ShapeRect    bounding;  /**<describe the bounding box around this entity*/
     void (*think)(struct ENTITY_S *self);   /**<a pointer to a think function for this entity*/
 }Entity;
@@ -64,6 +70,8 @@ void entity_draw(Entity *entity);
  */
 void entity_free(Entity *entity);
 
-List* entity_click(int mx, int my);
+List* entity_click(int mx, int my,int d,int k);
+
+Entity* overlap(Entity *entity);
 
 #endif

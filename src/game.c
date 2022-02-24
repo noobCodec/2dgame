@@ -11,7 +11,6 @@
 #include "algo.h"
 #include "gfc_list.h"
 #include "path_map.h"
-#include "pathfinder.h"
 #include "building.h"
 #include "camera.h"
 int main(int argc, char * argv[])
@@ -45,21 +44,13 @@ slog("hello world -->");
 /*0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, */
 /*0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, */
 /*0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};*/
-
-/*List *local = BFS(tmp,visited,11,19,0,1,20,12);*/
-/*Point *here;*/
-/*for(int i =0; i<gfc_list_get_count(local);i++)*/
-/*{*/
-/*	here = gfc_list_get_nth(local,i);*/
-/*	slog("%d,%d",here->x,here->y);*/
-/*	free(here);*/
-/*}*/
+//path_free(ptr);
 /*gfc_list_delete(local);*/
 
     int done = 0;
     const Uint8 * keys;
     Sprite *sprite;
-    
+    SDL_Event event;
     int mx,my;
     float mf = 0;
     Sprite *mouse;
@@ -84,14 +75,18 @@ slog("hello world -->");
     
     //sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-    bug_ent_new(vector2d(90,30));
+   Entity *bug1 = bug_ent_new(vector2d(90,30));
+    Entity *bug2 = bug_ent_new(vector2d(200,60));
     building_ent_new(vector2d(240,90));
     tilemap = tilemap_load("level/test.json");
 	Path_Map *path = Path_Map_load("level/test.json");
 	camera_set_dimensions(vector2d(1200,720));
 	camera_set_position(vector2d(20,20));
 	path_manager_init(12);
+	int init_x,init_y;
 	//Path_Map_debug(path);
+	Uint8 pressed = 0;
+	List* ents = NULL;
     while(!done)
     {
         SDL_PumpEvents();
@@ -103,12 +98,61 @@ slog("hello world -->");
         gf2d_graphics_clear_screen();
         tilemap_draw(tilemap);
         entity_manager_think_all();
-        List *tmp_ptr = entity_click(mx,my);
-        if(gfc_list_get_count(tmp_ptr)>0)
+        if(bug1->path!=NULL)
+        slog("BUG 1 PATH");
+       if(bug2->path!=NULL)
+        slog("BUG 2 PATH");
+        while(SDL_PollEvent(&event))
         {
-        	slog("clicked it");
+        	if(event.type == SDL_MOUSEBUTTONDOWN)
+        	{
+        	
+        		if(event.button.button == SDL_BUTTON_LEFT)
+        		{
+        			SDL_GetMouseState(&init_x,&init_y);
+        			pressed = 1;
+        		}
+        		if(event.button.button == SDL_BUTTON_RIGHT)
+        		{
+        		if(ents)
+        		{
+        		for(int i =0; i<gfc_list_get_count(ents);i++)
+					{
+						Entity *ent = gfc_list_get_nth(ents,i);
+						if(ent->damage)
+						{
+						Path *pat = path_new();
+						path_find(pat,mx,my,ent->position.x,ent->position.y,60);
+						ent->path = pat;
+						}
+					}
+        		}
+        		}
+        	}
+        	if(event.type == SDL_MOUSEBUTTONUP)
+        	{
+        		if(event.button.button == SDL_BUTTON_LEFT)
+        		{
+        			if(ents)
+        			{
+        				gfc_list_delete(ents);
+        				ents = NULL;
+        			}
+        			pressed = 0;
+        			ents = entity_click(mx,my,init_x,init_y);
+        			if(!gfc_list_get_count(ents))
+        			{
+        				gfc_list_delete(ents);
+        				ents = NULL;
+        			}
+        		}
+        	}
         }
-        free(tmp_ptr);
+        if(pressed){
+        	ShapeRect tmp = shape_rect_from_vector4d(vector4d(MIN(mx,init_x),MIN(my,init_y),MAX(mx,init_x)-MIN(mx,init_x),MAX(my,init_y)-MIN(my,init_y)));
+    gf2d_draw_rect(shape_rect_to_sdl_rect(tmp),vector4d(0,255,0,255));
+        }
+        	//slog("Pressed");
             //gf2d_sprite_draw_image(sprite,vector2d(0,0));
             
             

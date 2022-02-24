@@ -4,7 +4,7 @@
 typedef struct
 {
     Uint32 max_paths; 
-    PathFind  *path_list;       
+    Path  *path_list;       
 }PathManager;
 
 static PathManager path_manager = {0};
@@ -21,7 +21,7 @@ void path_manager_init(Uint32 max_paths)
 		return;
 	}
 	path_manager.max_paths = max_paths;
-	path_manager.path_list = gfc_allocate_array(sizeof(PathFind),max_paths);
+	path_manager.path_list = gfc_allocate_array(sizeof(Path),max_paths);
 	atexit(path_manager_close);
 }
 void path_manager_close()
@@ -37,7 +37,7 @@ void path_manager_clear()
 		path_free(&path_manager.path_list[i]);
 	}
 }
-void path_free(PathFind *path)
+void path_free(Path *path)
 {
 
     if (path == NULL)
@@ -45,116 +45,69 @@ void path_free(PathFind *path)
         slog("null pointer provided, nothing to do!");
         return;
     }
-    if (path->path != NULL)
-    {
-    	Point *here;
-        for(int i =0; i<gfc_list_get_count(path->path);i++)
-		{
-			here = gfc_list_get_nth(path->path,i);
-			free(here);
-		}
-		gfc_list_delete(path->path);
-    }
-    memset(path,0,sizeof(PathFind));
+	Point *here;
+	List *my_path = path->path;
+    for(int i =0; i<gfc_list_get_count(my_path);i++)
+	{
+		here = gfc_list_get_nth(my_path,i);
+		free(here);
+	}
+	gfc_list_delete(my_path);
+    memset(path,0,sizeof(Path));
     
 }
-void path_new(Uint8 id)
+Path *path_new()
 {
 	int i;
     for (i = 0;i < path_manager.max_paths;i++)
     {
-        if (!path_manager.path_list[i].ID)
+        if (!path_manager.path_list[i]._inuse)
         {
-            path_manager.path_list[i].ID = id;
-            return;
+            path_manager.path_list[i]._inuse = 1;
+            return &path_manager.path_list[i];
         }
     }
-
+	return NULL;
 }
-void path_find(Uint8 id,int srcx,int srcy,int dstx,int dsty,int scale)
+void path_find(Path* path,int srcx,int srcy,int dstx,int dsty,int scale)
 {
-	slog("%d:%d,%d:%d",srcx,srcy,dstx,dsty);
+	//slog("%d:%d,%d:%d",srcx/60,srcy/60,dstx/60,dsty/60);
 	int visited[240];
 	memset(visited,0,sizeof(visited));
-	PathFind *ptr = NULL;
-	int i;
-    for (i = 0;i < path_manager.max_paths;i++)
+	
+    if(path)
     {
-        if (path_manager.path_list[i].ID == id)
-        {
-            ptr = &path_manager.path_list[i];
-            break;
-        }
-    }
-    if(ptr)
-    {
-    List *myq = BFS(tmp,visited,srcx/scale,srcy/scale,dstx/scale,dsty/scale,12,20);
-    ptr->path=myq;
+		path->path = BFS(tmp,visited,srcx/scale,srcy/scale,dstx/scale,dsty/scale,12,20);
     }
     return;
 }
-int has_path(Uint8 id)
-{
 
-	PathFind *ptr = NULL;
-	int i;
-    for (i = 0;i < path_manager.max_paths;i++)
-    {
-        if (path_manager.path_list[i].ID == id)
-        {
-            ptr = &path_manager.path_list[i];
-            break;
-        }
-    }
-    if(ptr && ptr->path == NULL)
-    {
-    	return 0;
-    }
-    	return 1;
-}
-Vector2D travel_location(Uint8 id,float x, float y,int scale)
+Vector2D travel_location(Path* path,float x, float y,int scale)
 {
-	PathFind *ptr = NULL;
 	int realx = x / scale;
 	int realy = y / scale;
 	float calcx;
 	float calcy;
-	int i;
-    for (i = 0;i < path_manager.max_paths;i++)
+    if(!path->path)
     {
-        if (path_manager.path_list[i].ID == id)
-        {
-            ptr = &path_manager.path_list[i];
-            break;
-        }
+    	return vector2d(0,0);
     }
-    if(!ptr)
-    {
-    return vector2d(0,0);
-    }
-    List *next = ptr->path;
+    List *next = path->path;
     if(!next)
     {
-    return vector2d(0,0);
+    	return vector2d(0,0);
     } 
     Point *local = gfc_list_get_nth(next,0);
     if(gfc_list_get_count(next) && local->x==realx && local->y==realy)
     {
-    gfc_list_delete_nth(next,0);
-    local = gfc_list_get_nth(next,0);
+		gfc_list_delete_nth(next,0);
+		local = gfc_list_get_nth(next,0);
     }
     if(!gfc_list_get_count(next)) 
     {
-    	Point *here;
-        for(int i =0; i<gfc_list_get_count(next);i++)
-		{
-			here = gfc_list_get_nth(next,i);
-			free(here);
-		}
-		gfc_list_delete(next);
-    	ptr->path = NULL;
     	return vector2d(0,0);
     }
+    slog("pathing");
 /*    slog("x:%f,y:%f",local->x,local->y);*/
 /*    slog("LOCALx:%f,y:%f",realx,realy);*/
     calcx = local->x * scale + scale * 0.5;

@@ -1,7 +1,6 @@
 #include "simple_logger.h"
 #include "bug_ent.h"
 #include "building.h"
-#include "gf2d_draw.h"
 void building_think(Entity *self)
 {
 int flag = -1;

@@ -1,6 +1,7 @@
 
 #include "simple_logger.h"
 #include "entity.h"
+
 typedef struct
 {
     Uint32 max_entities;            /**<how many entities exist*/
@@ -134,10 +135,11 @@ void entity_free(Entity *entity)
     memset(entity,0,sizeof(Entity));
 }
 
-List* entity_click(int mx, int my)
+List* entity_click(int mx, int my,int init_x,int init_y)
 {
     List* touched = gfc_list_new();
-    ShapeRect tmp = shape_rect_from_vector4d(vector4d(mx-5,my-5,10,10));
+    ShapeRect tmp = shape_rect_from_vector4d(vector4d(MIN(mx,init_x),MIN(my,init_y),MAX(mx,init_x)-MIN(mx,init_x),MAX(my,init_y)-MIN(my,init_y)));
+    gf2d_draw_rect(shape_rect_to_sdl_rect(tmp),vector4d(0,255,0,255));
     int i;
     for (i = 0;i < entity_manager.max_entities;i++)
     {
@@ -149,6 +151,20 @@ List* entity_click(int mx, int my)
         }
     }
     return touched;
+}
+Entity* overlap(Entity *ent)
+{
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
+    {
+        if (!entity_manager.entity_list[i]._inuse)continue;
+        if ((&entity_manager.entity_list[i].range)==NULL)continue;
+        if(shape_circle_collision(ent->range,entity_manager.entity_list[i].range))
+        {
+        	return &entity_manager.entity_list[i];
+        }
+    }
+    return NULL;
 }
 
 // eof
