@@ -1,14 +1,18 @@
 #include "simple_logger.h"
 #include "bug_ent.h"
 #include "building.h"
+
+
 void building_think(Entity *self)
 {
-int flag = -1;
-static int blocked = 1;
-SDL_Event test_event;
-const Uint8 *keys;
-gf2d_draw_rect(shape_rect_to_sdl_rect(self->bounding),vector4d(0,255,0,255));
+	if(self->build == 2)
+	{
+		bug_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		self->build = 1;
+	}
+
 }
+
 Entity *building_ent_new(Vector2D position)
 {
     Entity *ent;
@@ -26,6 +30,7 @@ Entity *building_ent_new(Vector2D position)
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,128,112));
     ent->rotation.x = 0;
     ent->rotation.y = 0;
+    ent->build = 1;
     vector2d_copy(ent->position,position);
     return ent;
 }

@@ -4,14 +4,6 @@
 #include "gfc_list.h"
 #include "simple_logger.h"
 
-Point *init_point(int x,int y)
-{
-	Point *new = malloc(sizeof(Point));
-	new->x = x;
-	new->y = y;
-	new->prev = NULL;
-	return new;
-}
 
 int isValid(int *visited,int row,int col,int col_size,int row_size)
 { 
@@ -107,6 +99,50 @@ List* BFS(int *grid,int *visited,int row,int col,int goal_row, int goal_col,int 
 			q = gfc_list_append(q,ptr);
 			visited[adjx*col_size+y] = 1;
 		}
+/*		adjx = x - 1;*/
+/*		adjy = y - 1;*/
+/*		if(isValid(visited,adjx,adjy,col_size,length) && (grid[adjx*col_size+adjy]!=-1))*/
+/*		{*/
+/*			ptr = init_point(adjx,adjy);*/
+/*			tobefreed=gfc_list_append(tobefreed,ptr);*/
+/*			//gfc_list_get_nth(grid,adjx*col_size+adjy);*/
+/*			ptr->prev = cell;*/
+/*			q = gfc_list_append(q,ptr);*/
+/*			visited[adjx*col_size+y] = 1;*/
+/*		}*/
+/*		adjx = x + 1;*/
+/*		adjy = y + 1;*/
+/*		if(isValid(visited,adjx,adjy,col_size,length) && (grid[adjx*col_size+adjy]!=-1))*/
+/*		{*/
+/*			ptr = init_point(adjx,adjy);*/
+/*			tobefreed=gfc_list_append(tobefreed,ptr);*/
+/*			//gfc_list_get_nth(grid,adjx*col_size+adjy);*/
+/*			ptr->prev = cell;*/
+/*			q = gfc_list_append(q,ptr);*/
+/*			visited[adjx*col_size+y] = 1;*/
+/*		}*/
+/*		adjx = x + 1;*/
+/*		adjy = y - 1;*/
+/*		if(isValid(visited,adjx,adjy,col_size,length) && (grid[adjx*col_size+adjy]!=-1))*/
+/*		{*/
+/*			ptr = init_point(adjx,adjy);*/
+/*			tobefreed=gfc_list_append(tobefreed,ptr);*/
+/*			//gfc_list_get_nth(grid,adjx*col_size+adjy);*/
+/*			ptr->prev = cell;*/
+/*			q = gfc_list_append(q,ptr);*/
+/*			visited[adjx*col_size+y] = 1;*/
+/*		}*/
+/*		adjx = x - 1;*/
+/*		adjy = y + 1;*/
+/*		if(isValid(visited,adjx,adjy,col_size,length) && (grid[adjx*col_size+adjy]!=-1))*/
+/*		{*/
+/*			ptr = init_point(adjx,adjy);*/
+/*			tobefreed=gfc_list_append(tobefreed,ptr);*/
+/*			//gfc_list_get_nth(grid,adjx*col_size+adjy);*/
+/*			ptr->prev = cell;*/
+/*			q = gfc_list_append(q,ptr);*/
+/*			visited[adjx*col_size+y] = 1;*/
+/*		}*/
 	}
 	for(int i =0; i<gfc_list_get_count(tobefreed);i++)
 	{
