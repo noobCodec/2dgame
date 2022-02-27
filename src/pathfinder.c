@@ -118,7 +118,7 @@ Vector2D travel_location(Path* path,float x, float y,int scale)
 /*    slog("x:%f,y:%f",calcx,calcy);*/
     Vector2D res = vector2d(calcx-realx,calcy-realy);
 /*    slog("RESx:%f,y:%f",res.x,res.y);*/
-    vector2d_set_magnitude(&res,5);
+    vector2d_set_magnitude(&res,1);
     return res;
 }
 

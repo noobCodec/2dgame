@@ -108,6 +108,11 @@ void entity_draw(Entity *entity)
         slog("null pointer provided, nothing to do!");
         return;
     }
+    if(entity->draw)
+    {
+		entity->draw(entity);
+		return;
+    }
     if (entity->sprite == NULL)return;// nothing to draw
     vector2d_add(drawPosition,entity->position,entity->draw_offset);
     gf2d_sprite_draw(

@@ -14,7 +14,10 @@
 #include "building.h"
 #include "camera.h"
 #include "input.h"
+#include "font.h"
+#include "mage_ent.h"
 #include "crystal.h"
+#include "actor.h"
 int main(int argc, char * argv[])
 {
 init_logger("gf2d.log");
@@ -33,8 +36,8 @@ slog("hello world -->");
     slog("---==== BEGIN ====---");
     gf2d_graphics_initialize(
         "gf2d",
-        1200,
-        720,
+        2560,
+        1440,
         1200,
         720,
         vector4d(0,0,0,255),
@@ -43,6 +46,8 @@ slog("hello world -->");
     gf2d_sprite_init(1024);
     tile_set_manager_init(16);
     entity_manager_init(1024);
+    path_manager_init(12);
+    gem_action_list_init(128);
     SDL_ShowCursor(SDL_DISABLE);
     
     //sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
@@ -50,9 +55,16 @@ slog("hello world -->");
    	bug_ent_new(vector2d(90,30),30);
     crystal_ent_new(vector2d(200,60),90);
     building_ent_new(vector2d(240,90));
+    mage_ent_new(vector2d(500,500),50);
     tilemap = tilemap_load("level/test.json");
 	Path_Map *path = Path_Map_load("level/test.json");
-	path_manager_init(12);
+	font_init(1);
+	int resources = 0;
+	char *out = malloc(14 * sizeof(char));
+	
+	Font *char_font = font_load("images/text.ttf",32);
+	
+	
 	//Path_Map_debug(path);
     while(!done)
     {
@@ -61,13 +73,14 @@ slog("hello world -->");
         SDL_GetMouseState(&mx,&my);
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
-        
-        
+        resources++;
+        sprintf(out,"%s%d","Resources: ",resources);
         gf2d_graphics_clear_screen();
         tilemap_draw(tilemap);
         entity_manager_think_all();
         check_inputs();
         entity_manager_draw_all();
+        font_render(char_font,out,vector2d(200,200),gfc_color_from_vector4(vector4d(255,255,0,255)));
      	gf2d_sprite_draw(
                 mouse,
                 vector2d(mx,my),
