@@ -13,8 +13,9 @@ typedef struct ENTITY_S
 {
     Uint8       _inuse;     /**<this flag keeps track if this entity is active or free to reassign*/
     Uint8		build;
+    Uint8 		dead;
     Uint8		damage;
-    Uint32		health;
+    int			health;
     Sprite     *sprite;     /**<sprite used to draw the sprite*/
     float       frame;      /**<current frame to draw*/
     Vector2D    draw_offset;/**<draw position relative to the entity position*/

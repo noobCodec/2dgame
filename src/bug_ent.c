@@ -56,7 +56,7 @@ Entity *bug_ent_new(Vector2D position,int fire_range)
     ent->rotation.x = 64;
     ent->rotation.y = 64;
     ent->damage = 10;
-    ent->health = 100000000;
+    ent->health = 1000;
     ent->path = NULL;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,32,32));
     ent->enemy = NULL;

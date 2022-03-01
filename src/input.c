@@ -77,6 +77,48 @@ void check_inputs()
 										ent->build = 2;
 									}
 								}
+						break;
+					case SDLK_e:
+						for(int i =0; i<gfc_list_get_count(ents);i++)
+								{
+									ent = gfc_list_get_nth(ents,i);
+									if(ent->build==1)
+									{
+										ent->build = 3;
+									}
+								}
+						break;
+					case SDLK_r:
+						for(int i =0; i<gfc_list_get_count(ents);i++)
+								{
+									ent = gfc_list_get_nth(ents,i);
+									if(ent->build==1)
+									{
+										ent->build = 4;
+									}
+								}
+						break;
+					case SDLK_t:
+						for(int i =0; i<gfc_list_get_count(ents);i++)
+								{
+									ent = gfc_list_get_nth(ents,i);
+									if(ent->build==1)
+									{
+										ent->build = 5;
+									}
+								}
+						break;
+					case SDLK_y:
+						for(int i =0; i<gfc_list_get_count(ents);i++)
+								{
+									ent = gfc_list_get_nth(ents,i);
+									if(ent->build==1)
+									{
+										ent->build = 6;
+									}
+								}
+						break;
+						
 				}
 		    }
         }

@@ -41,6 +41,13 @@
         "startFrame": 30,
         "endFrame": 39,
         "frameRate": 0.1
+      },
+      {
+        "action": "die",
+        "type": "loop",
+        "startFrame": 40,
+        "endFrame": 49,
+        "frameRate": 0.1
       }
     ]
   }

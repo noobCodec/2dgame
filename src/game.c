@@ -18,6 +18,7 @@
 #include "mage_ent.h"
 #include "crystal.h"
 #include "actor.h"
+#include "warrior.h"
 int main(int argc, char * argv[])
 {
 init_logger("gf2d.log");
@@ -55,7 +56,8 @@ slog("hello world -->");
    	bug_ent_new(vector2d(90,30),30);
     crystal_ent_new(vector2d(200,60),90);
     building_ent_new(vector2d(240,90));
-    mage_ent_new(vector2d(500,500),50);
+    warrior_ent_new(vector2d(100,150),60);
+    mage_ent_new(vector2d(200,150),10);
     tilemap = tilemap_load("level/test.json");
 	Path_Map *path = Path_Map_load("level/test.json");
 	font_init(1);

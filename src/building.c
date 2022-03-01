@@ -1,5 +1,9 @@
 #include "simple_logger.h"
-#include "bug_ent.h"
+#include "mage_ent.h"
+#include "goblin.h"
+#include "ranger.h"
+#include "warrior.h"
+#include "rogue.h"
 #include "building.h"
 
 
@@ -7,7 +11,27 @@ void building_think(Entity *self)
 {
 	if(self->build == 2)
 	{
-		bug_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		mage_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		self->build = 1;
+	}
+	if(self->build == 3)
+	{
+		goblin_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		self->build = 1;
+	}
+	if(self->build == 4)
+	{
+		ranger_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		self->build = 1;
+	}
+	if(self->build == 5)
+	{
+		warrior_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		self->build = 1;
+	}
+	if(self->build == 6)
+	{
+		rogue_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
 		self->build = 1;
 	}
 
