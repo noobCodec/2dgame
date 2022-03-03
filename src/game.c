@@ -37,8 +37,8 @@ slog("hello world -->");
     slog("---==== BEGIN ====---");
     gf2d_graphics_initialize(
         "gf2d",
-        2560,
-        1440,
+        1200,
+        720,
         1200,
         720,
         vector4d(0,0,0,255),

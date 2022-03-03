@@ -3,12 +3,14 @@
 5 world features to impact gameplay
 
 AI to control enemy team
+    Deterministic no Trees
 
-Unit AI to follow basic orders and path find
+Unit AI to follow basic orders and path find --DONE
+    Attack/Idle/Move
 
 Basic buildings and resource gathering
 
-Functioning Entity System
+Functioning Entity System --DONE
 
 Fully interactable environment
 
@@ -16,4 +18,4 @@ User Interface (HUD, Stats, Messages, menus)
 
 File read / write access (high score list, saved games, saved songs, etc)
 
-README for how to play and see all game features (this should be in the git repo)
+README for how to play and see all game features (this should be in the git repo) --DONE

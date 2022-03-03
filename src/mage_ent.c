@@ -2,9 +2,7 @@
 #include "mage_ent.h"
 void mage_think(Entity *self)
 {
-	//self->frame = (self->frame + 0.1);
-    //if (self->frame >= 10)self->frame = 0;
-	if(self->health <= 0 )
+	    	if(self->health <= 0 )
 	{
 		slog("%d",gem_actor_get_frames_remaining(self->actor));
 		if(!self->dead)
@@ -24,8 +22,6 @@ void mage_think(Entity *self)
 	self->bounding = shape_rect_from_vector4d(vector4d(self->position.x,self->position.y,32,32));
 	self->range = shape_circle(self->position.x+16,self->position.y+16,self->range.r);
 	gf2d_draw_circle(vector2d(self->range.x,self->range.y),self->range.r,vector4d(0,255,0,255));
-	Vector2D direction;
-	float angle;
 	gf2d_draw_rect(shape_rect_to_sdl_rect(self->bounding),vector4d(0,255,0,255));
 	if(!self) return;
 	self->enemy = overlap(self);
@@ -33,20 +29,16 @@ void mage_think(Entity *self)
 	{
 	if(strcmp(gem_actor_get_current_action(self->actor)->name,"attack"))
 	{
-		//slog("poo");
-		gem_actor_set_action(self->actor,"attack");
+				gem_actor_set_action(self->actor,"attack");
 	}
 		self->enemy->health -= self->damage;
-		//slog("%d", self->enemy->health);
-		
+				
 	}
 	if(self->path && gfc_list_get_count(self->path->path))
 	{
-	//slog("p]");
-	if(strcmp(gem_actor_get_current_action(self->actor)->name,"move"))
+		if(strcmp(gem_actor_get_current_action(self->actor)->name,"move"))
 	{
-		//slog("poo");
-		gem_actor_set_action(self->actor,"move");
+				gem_actor_set_action(self->actor,"move");
 	}
 	
 	Vector2D out = travel_location(self->path,self->position.x,self->position.y,30);
@@ -60,8 +52,7 @@ void mage_think(Entity *self)
 	{
 	if(strcmp(gem_actor_get_current_action(self->actor)->name,"idle"))
 	{
-		//slog("poo");
-		gem_actor_set_action(self->actor,"idle");
+				gem_actor_set_action(self->actor,"idle");
 	}
 	slog("freed");
 	path_free(self->path);
@@ -71,16 +62,13 @@ void mage_think(Entity *self)
 	{
 		if(strcmp(gem_actor_get_current_action(self->actor)->name,"idle"))
 	{
-		//slog("poo");
-		gem_actor_set_action(self->actor,"idle");
+				gem_actor_set_action(self->actor,"idle");
 	}
 	}
 }
 void mage_draw(Entity *self)
 {
 	if(!self->actor)return;
-	Action *tmp = gem_actor_get_current_action(self->actor);
-	//slog("%s,%d,%d,%f",tmp->name,tmp->startFrame,tmp->endFrame,tmp->frameRate);
 	gem_actor_draw(self->actor,self->position,NULL,NULL,&self->rotation,&self->flip);
 	gem_actor_next_frame(self->actor);
 
@@ -96,8 +84,7 @@ Entity *mage_ent_new(Vector2D position,int fire_range)
         return NULL;
     }
     gem_actor_load(tmp,"level/mage.json");
-    //ent->sprite = gf2d_sprite_load_all("images/mage.png",32,32,10);
-    ent->think = mage_think;
+        ent->think = mage_think;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);
     ent->draw_scale = vector2d(1,1);

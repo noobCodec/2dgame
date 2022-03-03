@@ -31,8 +31,7 @@ void ranger_think(Entity *self)
 	{
 	if(strcmp(gem_actor_get_current_action(self->actor)->name,"attack"))
 	{
-		//slog("poo");
-		gem_actor_set_action(self->actor,"attack");
+				gem_actor_set_action(self->actor,"attack");
 	}
 		self->enemy->health -= self->damage;
 		slog("%d", self->enemy->health);
@@ -40,11 +39,9 @@ void ranger_think(Entity *self)
 	}
 	if(self->path && gfc_list_get_count(self->path->path))
 	{
-	//slog("p]");
-	if(strcmp(gem_actor_get_current_action(self->actor)->name,"move"))
+		if(strcmp(gem_actor_get_current_action(self->actor)->name,"move"))
 	{
-		//slog("poo");
-		gem_actor_set_action(self->actor,"move");
+				gem_actor_set_action(self->actor,"move");
 	}
 	
 	Vector2D out = travel_location(self->path,self->position.x,self->position.y,30);
@@ -58,8 +55,7 @@ void ranger_think(Entity *self)
 	{
 	if(strcmp(gem_actor_get_current_action(self->actor)->name,"idle"))
 	{
-		//slog("poo");
-		gem_actor_set_action(self->actor,"idle");
+				gem_actor_set_action(self->actor,"idle");
 	}
 	slog("freed");
 	path_free(self->path);
@@ -69,16 +65,13 @@ void ranger_think(Entity *self)
 	{
 		if(strcmp(gem_actor_get_current_action(self->actor)->name,"idle"))
 	{
-		//slog("poo");
-		gem_actor_set_action(self->actor,"idle");
+				gem_actor_set_action(self->actor,"idle");
 	}
 	}
 }
 void ranger_draw(Entity *self)
 {
 	if(!self->actor)return;
-	Action *tmp = gem_actor_get_current_action(self->actor);
-	slog("%s,%d,%d,%f",tmp->name,tmp->startFrame,tmp->endFrame,tmp->frameRate);
 	gem_actor_draw(self->actor,self->position,NULL,NULL,&self->rotation,&self->flip);
 	gem_actor_next_frame(self->actor);
 
@@ -94,8 +87,7 @@ Entity *ranger_ent_new(Vector2D position,int fire_range)
         return NULL;
     }
     gem_actor_load(tmp,"level/ranger.json");
-    //ent->sprite = gf2d_sprite_load_all("images/mage.png",32,32,10);
-    ent->think = ranger_think;
+        ent->think = ranger_think;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);
     ent->draw_scale = vector2d(1,1);
