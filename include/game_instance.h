@@ -32,3 +32,4 @@ game_instance *game_new(int isPlayer);
  */
 void game_free(game_instance *entity);
 
+game_instance *get_game(int team);

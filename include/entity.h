@@ -15,6 +15,7 @@ typedef struct ENTITY_S
     Uint8		build;
     Uint8 		dead;
     Uint8		damage;
+    Uint8       team;
     int			health;
     Sprite     *sprite;     /**<sprite used to draw the sprite*/
     float       frame;      /**<current frame to draw*/
