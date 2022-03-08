@@ -19,10 +19,10 @@
 #include "crystal.h"
 #include "actor.h"
 #include "warrior.h"
+#include "game_instance.h"
 int main(int argc, char * argv[])
 {
 init_logger("gf2d.log");
-slog("hello world -->");
     int done = 0;
     const Uint8 * keys;
     Sprite *sprite;
@@ -53,13 +53,16 @@ slog("hello world -->");
     
     //sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-   	bug_ent_new(vector2d(90,30),30);
+   	//bug_ent_new(vector2d(90,30),30);
     crystal_ent_new(vector2d(200,60),90);
-    building_ent_new(vector2d(240,90));
-    warrior_ent_new(vector2d(100,150),60);
-    mage_ent_new(vector2d(200,150),10);
+    //building_ent_new(vector2d(240,90));
+    //warrior_ent_new(vector2d(100,150),60);
+    //mage_ent_new(vector2d(200,150),10);
     tilemap = tilemap_load("level/test.json");
 	Path_Map *path = Path_Map_load("level/test.json");
+    game_manager_init(20);
+    game_new(1);
+    game_new(0);
 	font_init(1);
 	int resources = 0;
 	char *out = malloc(14 * sizeof(char));
@@ -80,8 +83,8 @@ slog("hello world -->");
         gf2d_graphics_clear_screen();
         tilemap_draw(tilemap);
         entity_manager_think_all();
-        check_inputs();
         entity_manager_draw_all();
+        check_inputs();
         font_render(char_font,out,vector2d(200,200),gfc_color_from_vector4(vector4d(255,255,0,255)));
      	gf2d_sprite_draw(
                 mouse,

@@ -88,7 +88,7 @@ Entity *goblin_ent_new(Vector2D position,int fire_range)
         return NULL;
     }
     gem_actor_load(tmp,"level/goblin.json");
-        ent->think = goblin_think;
+    ent->think = goblin_think;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);
     ent->draw_scale = vector2d(1,1);

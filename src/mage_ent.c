@@ -2,9 +2,10 @@
 #include "mage_ent.h"
 void mage_think(Entity *self)
 {
+    slog("%d",self->team);
 	    	if(self->health <= 0 )
 	{
-		slog("%d",gem_actor_get_frames_remaining(self->actor));
+		//slog("%d",gem_actor_get_frames_remaining(self->actor));
 		if(!self->dead)
 		{
 			gem_actor_set_action(self->actor,"die");
@@ -54,7 +55,7 @@ void mage_think(Entity *self)
 	{
 				gem_actor_set_action(self->actor,"idle");
 	}
-	slog("freed");
+	//slog("freed");
 	path_free(self->path);
 	self->path = NULL;
 	}

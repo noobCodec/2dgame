@@ -6,35 +6,39 @@
 #include "rogue.h"
 #include "building.h"
 
-
+//TODO: transform if to switch
 void building_think(Entity *self)
 {
+    Entity *tmp = NULL;
 	if(self->build == 2)
 	{
-		mage_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		tmp = mage_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),60);
 		self->build = 1;
 	}
-	if(self->build == 3)
+	else if(self->build == 3)
 	{
-		goblin_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		tmp = goblin_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),15);
 		self->build = 1;
 	}
-	if(self->build == 4)
+	else if(self->build == 4)
 	{
-		ranger_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		tmp = ranger_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),70);
 		self->build = 1;
 	}
-	if(self->build == 5)
+	else if(self->build == 5)
 	{
-		warrior_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		tmp = warrior_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),30);
 		self->build = 1;
 	}
-	if(self->build == 6)
+	else if(self->build == 6)
 	{
-		rogue_ent_new(vector2d(self->position.x+self->draw_offset.x,self->position.y+self->draw_offset.y+45),30);
+		tmp = rogue_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),25);
 		self->build = 1;
 	}
-
+    if(tmp){
+    tmp->team = self->team;
+    slog("%d",tmp->team);
+    }
 }
 
 Entity *building_ent_new(Vector2D position)

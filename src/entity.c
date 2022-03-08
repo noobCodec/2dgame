@@ -166,7 +166,7 @@ Entity* overlap(Entity *ent)
         if (!entity_manager.entity_list[i]._inuse)continue;
         if ((&entity_manager.entity_list[i].range)==NULL)continue;
         Entity* other = &entity_manager.entity_list[i];
-        if(ent != other && other->damage && shape_rect_circle_collision(ent->range,other->bounding))
+        if(ent->team != other->team && ent != other && other->damage && shape_rect_circle_collision(ent->range,other->bounding))
         {
         	return &entity_manager.entity_list[i];
         }
