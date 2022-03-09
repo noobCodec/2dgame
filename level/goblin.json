@@ -1,0 +1,54 @@
+{
+  "actor": {
+    "sprite": "images/goblin.png",
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "framesPerLine": 10,
+    "scale": [
+      1,
+      1
+    ],
+    "color": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "colorSpecial": [
+      255,
+      100,
+      255,
+      230
+    ],
+    "actionList": [
+      {
+        "action": "idle",
+        "type": "loop",
+        "startFrame": 50,
+        "endFrame": 59,
+        "frameRate": 0.1
+      },
+      {
+        "action": "move",
+        "type": "loop",
+        "startFrame": 70,
+        "endFrame": 79,
+        "frameRate": 0.1
+      },
+      {
+        "action": "attack",
+        "type": "loop",
+        "startFrame": 80,
+        "endFrame": 89,
+        "frameRate": 0.1
+      },
+      {
+        "action": "die",
+        "type": "loop",
+        "startFrame": 90,
+        "endFrame": 99,
+        "frameRate": 0.1
+      }
+    ]
+  }
+}

@@ -7,9 +7,17 @@ Queue* createQueue(unsigned capacity)
 	q->front = q->size = 0;
 	
 	q->rear = capacity-1;
-	q->array = malloc(capacity * sizeof(Vector2D));
-	memset(q->array,0,capacity*sizeof(Vector2D));
+	q->array = malloc(capacity * sizeof(Point));
+	memset(q->array,0,capacity*sizeof(Point));
 	return q;
+}
+Point *init_point(int x,int y)
+{
+	Point *new = malloc(sizeof(Point));
+	new->x = x;
+	new->y = y;
+	new->prev = NULL;
+	return new;
 }
 int isFull(Queue *q)
 {
@@ -19,11 +27,11 @@ int isEmpty(Queue *q)
 {
 	return q->size == 0;
 }
-void push(Queue *q, Vector2D item)
+void push(Queue *q, Point item)
 {
 	if(isFull(q)){
 	 	q->capacity *= 2;
-	 	Vector2D *tmp = realloc(q->array,q->capacity*sizeof(Vector2D));
+	 	Point *tmp = realloc(q->array,q->capacity*sizeof(Point));
 	 	if(tmp)
 	 		q->array = tmp;
 	 	else
@@ -39,20 +47,20 @@ void push(Queue *q, Vector2D item)
 	q->array[q->rear] = item;
 	q->size = q->size+1;
 }
-Vector2D *pop(Queue *q)
+Point *pop(Queue *q)
 {
 	if(isEmpty(q)) return NULL;
-	Vector2D *item = &q->array[q->front];
+	Point *item = &q->array[q->front];
 	q->front = (q->front + 1) % q->capacity;
 	q->size = q->size - 1;
 	return item;
 }
-Vector2D *front(Queue *q)
+Point *front(Queue *q)
 {
 	if(isEmpty(q)) return NULL;
 	return &q->array[q->front];
 }
-Vector2D *rear(Queue *q)
+Point *rear(Queue *q)
 {
 	if(isEmpty(q)) return NULL;
 	return &q->array[q->rear];

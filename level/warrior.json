@@ -1,0 +1,54 @@
+{
+  "actor": {
+    "sprite": "images/warrior.png",
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "framesPerLine": 10,
+    "scale": [
+      1,
+      1
+    ],
+    "color": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "colorSpecial": [
+      255,
+      100,
+      255,
+      230
+    ],
+    "actionList": [
+      {
+        "action": "idle",
+        "type": "loop",
+        "startFrame": 0,
+        "endFrame": 9,
+        "frameRate": 0.1
+      },
+      {
+        "action": "move",
+        "type": "loop",
+        "startFrame": 20,
+        "endFrame": 29,
+        "frameRate": 0.1
+      },
+      {
+        "action": "attack",
+        "type": "loop",
+        "startFrame": 30,
+        "endFrame": 39,
+        "frameRate": 0.1
+      },
+      {
+        "action": "die",
+        "type": "loop",
+        "startFrame": 40,
+        "endFrame": 49,
+        "frameRate": 0.1
+      }
+    ]
+  }
+}

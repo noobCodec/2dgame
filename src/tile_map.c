@@ -112,14 +112,7 @@ void tilemap_draw(TileMap *map)
                 (i / map->tilemap_width) * map->tileset->tile_height));
     }
 }
-void tilemap_update(TileMap *map)
-{
-	SDL_Rect camera;
-	if(!map) return;
-	camera = camera_get_rect();
-	slog("%d:%d",camera.x,camera.y);
-	slog("%d:%d",map->tilemap_count,map->tilemap_width);
 
-}
+
 
 // eol

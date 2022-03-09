@@ -1,11 +1,21 @@
 #include "gfc_vector.h"
+typedef struct Point Point;
+
+struct Point
+{
+	int x;
+	int y;
+	Point *prev;
+};
+
 
 typedef struct {
 	int front, rear, size;
 	unsigned capacity;
-	Vector2D *array;
+	Point *array;
 } Queue;
 
+Point *init_point(int x,int y);
 /*
  * Make a queue 
  */
@@ -25,21 +35,21 @@ int isEmpty(Queue* q);
 /*
  * push onto our queue
  */
-void push(Queue* q,Vector2D item);
+void push(Queue* q,Point item);
 
 /*
  * pop item from our queue
  */
-Vector2D *pop(Queue* q);
+Point *pop(Queue* q);
 
 /*
  * return first elem in q
  */
-Vector2D *front(Queue* q);
+Point *front(Queue* q);
 /*
  * return last elem in q
  */
-Vector2D *rear(Queue* q);
+Point *rear(Queue* q);
 
 void killqueue(Queue *q);
 

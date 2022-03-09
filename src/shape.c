@@ -90,4 +90,21 @@ Bool shape_rect_collision(ShapeRect a,ShapeRect b)
     return true;
 
 }
+
+Bool shape_rect_circle_collision(ShapeCircle a, ShapeRect b)
+{
+	ShapeRect newrect;
+    newrect = shape_rect_from_vector4d(vector4d(b.x - a.r,b.y,b.w + a.r+ a.r,b.h));
+    if (shape_point_in_rect(vector2d(a.x,a.y),newrect))return true;
+   	newrect = shape_rect_from_vector4d(vector4d(b.x,b.y - a.r,b.w,b.h + a.r + a.r));
+    if (shape_point_in_rect(vector2d(a.x,a.y),newrect))return true;
+    
+    if (shape_point_in_circle(vector2d(b.x,b.y),a))return true;
+    if (shape_point_in_circle(vector2d(b.x+b.w,b.y),a))return true;
+    if (shape_point_in_circle(vector2d(b.x,b.y+b.h),a))return true;
+    if (shape_point_in_circle(vector2d(b.x+b.w,b.y+b.h),a))return true;
+    return false;
+	
+	
+}
 /*eol@eof*/

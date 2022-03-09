@@ -108,6 +108,11 @@ void entity_draw(Entity *entity)
         slog("null pointer provided, nothing to do!");
         return;
     }
+    if(entity->draw)
+    {
+		entity->draw(entity);
+		return;
+    }
     if (entity->sprite == NULL)return;// nothing to draw
     vector2d_add(drawPosition,entity->position,entity->draw_offset);
     gf2d_sprite_draw(
@@ -157,9 +162,11 @@ Entity* overlap(Entity *ent)
     int i;
     for (i = 0;i < entity_manager.max_entities;i++)
     {
+    	
         if (!entity_manager.entity_list[i]._inuse)continue;
         if ((&entity_manager.entity_list[i].range)==NULL)continue;
-        if(shape_circle_collision(ent->range,entity_manager.entity_list[i].range))
+        Entity* other = &entity_manager.entity_list[i];
+        if(ent->team != other->team && ent != other && other->damage && shape_rect_circle_collision(ent->range,other->bounding))
         {
         	return &entity_manager.entity_list[i];
         }

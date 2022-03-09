@@ -9,7 +9,7 @@ typedef struct
 
 static PathManager path_manager = {0};
 
-	int tmp[240] = {0};
+	int tmp[960] = {0};
 void path_manager_init(Uint32 max_paths)
 {
 	if(max_paths == 0)
@@ -72,12 +72,13 @@ Path *path_new()
 void path_find(Path* path,int srcx,int srcy,int dstx,int dsty,int scale)
 {
 	//slog("%d:%d,%d:%d",srcx/60,srcy/60,dstx/60,dsty/60);
-	int visited[240];
+	int visited[960];
 	memset(visited,0,sizeof(visited));
 	
     if(path)
     {
-		path->path = BFS(tmp,visited,srcx/scale,srcy/scale,dstx/scale,dsty/scale,12,20);
+		path->path = BFS(tmp,visited,srcx/scale,srcy/scale,dstx/scale,dsty/scale,24,40);
+		slog("path found");
     }
     return;
 }
@@ -107,7 +108,7 @@ Vector2D travel_location(Path* path,float x, float y,int scale)
     {
     	return vector2d(0,0);
     }
-    slog("pathing");
+    //slog("pathing");
 /*    slog("x:%f,y:%f",local->x,local->y);*/
 /*    slog("LOCALx:%f,y:%f",realx,realy);*/
     calcx = local->x * scale + scale * 0.5;
@@ -117,7 +118,7 @@ Vector2D travel_location(Path* path,float x, float y,int scale)
 /*    slog("x:%f,y:%f",calcx,calcy);*/
     Vector2D res = vector2d(calcx-realx,calcy-realy);
 /*    slog("RESx:%f,y:%f",res.x,res.y);*/
-    vector2d_set_magnitude(&res,5);
+    vector2d_set_magnitude(&res,1);
     return res;
 }
 

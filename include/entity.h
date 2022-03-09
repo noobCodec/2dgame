@@ -8,23 +8,30 @@
 #include "pathfinder.h"
 #include "gfc_types.h"
 #include "gf2d_draw.h"
-
+#include "actor.h"
 typedef struct ENTITY_S
 {
     Uint8       _inuse;     /**<this flag keeps track if this entity is active or free to reassign*/
-    Uint8		health;
+    Uint8		build;
+    Uint8 		dead;
     Uint8		damage;
+    Uint8       team;
+    int			health;
     Sprite     *sprite;     /**<sprite used to draw the sprite*/
     float       frame;      /**<current frame to draw*/
     Vector2D    draw_offset;/**<draw position relative to the entity position*/
     Vector2D    position;   /**<where our entity lives*/
+    Vector2D	flip;
     Vector2D    velocity;   /**<how our entity moves*/
     Vector3D    rotation;   /**<how to rotate the sprite*/
     Vector2D    draw_scale;  /**<the scale factor for drawing the sprite*/
     Path *path;
+    struct ENTITY_S *enemy;
+    Actor *actor;
     ShapeCircle  range;
     ShapeRect    bounding;  /**<describe the bounding box around this entity*/
     void (*think)(struct ENTITY_S *self);   /**<a pointer to a think function for this entity*/
+    void (*draw)(struct ENTITY_S *self);
 }Entity;
 
 
