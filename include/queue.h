@@ -1,3 +1,6 @@
+#ifndef __QUEUE_H__
+#define __QUEUE_H__
+
 #include "gfc_vector.h"
 typedef struct Point Point;
 
@@ -52,4 +55,4 @@ Point *front(Queue* q);
 Point *rear(Queue* q);
 
 void killqueue(Queue *q);
-
+#endif

@@ -1,5 +1,5 @@
-#ifndef __GF2D_ACTOR_H__
-#define __GF2D_ACTOR_H__
+#ifndef __ACTOR_H__
+#define __ACTOR_H__
 
 #include <SDL.h>
 

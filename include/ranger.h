@@ -1,3 +1,5 @@
+#ifndef __RANGER_H__
+#define __RANGER_H__
 #include "entity.h"
 
 /**
@@ -6,3 +8,5 @@
  * @returns NULL on error, or a pointer to the bug
  */
 Entity *ranger_ent_new(Vector2D position, int fire_range);
+
+#endif

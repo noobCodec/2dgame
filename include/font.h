@@ -1,3 +1,6 @@
+#ifndef __FONT_H__
+#define __FONT_H__
+
 #include <SDL_ttf.h>
 
 #include "gfc_vector.h"
@@ -21,3 +24,5 @@ void font_init(Uint32 maxFonts);
 Font *font_load(const char *filename, int ptsize);
 void font_free(Font * font);
 void font_render(Font *font,char *text,Vector2D position,Color color);
+
+#endif

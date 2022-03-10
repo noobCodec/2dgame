@@ -1,3 +1,6 @@
+#ifndef __SHAPE_H__
+#define __SHAPE_H__
+
 #include "gfc_types.h"
 #include "gfc_vector.h"
 
@@ -53,3 +56,5 @@ Bool shape_rect_collision(ShapeRect a,ShapeRect b);
 
 
 Bool shape_rect_circle_collision(ShapeCircle a, ShapeRect b);
+
+#endif

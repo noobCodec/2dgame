@@ -1,3 +1,6 @@
+#ifndef __GAME_INSTANCE_H__
+#define __GAME_INSTANCE_H__
+
 #include "entity.h"
 
 typedef struct game_t
@@ -33,3 +36,4 @@ game_instance *game_new(int isPlayer);
 void game_free(game_instance *entity);
 
 game_instance *get_game(int team);
+#endif
