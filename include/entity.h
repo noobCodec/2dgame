@@ -13,8 +13,10 @@ typedef struct ENTITY_S
 {
     Uint8       _inuse;     /**<this flag keeps track if this entity is active or free to reassign*/
     Uint8		build;
+    Uint8       blocked;
     Uint8 		dead;
     Uint8		damage;
+    SDL_TimerID time;
     Uint8       team;
     int			health;
     Sprite     *sprite;     /**<sprite used to draw the sprite*/

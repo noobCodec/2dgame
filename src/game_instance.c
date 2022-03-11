@@ -76,7 +76,7 @@ game_instance *game_new(int isPlayer)
             if(isPlayer)
                 tmp = building_ent_new(vector2d(100,50));
             else
-                tmp = building_ent_new(vector2d(1000,550));
+                tmp = building_ent_new(vector2d(300,400));
             tmp->team = isPlayer ? 0 : t_curr++;
             return &game_manager.players[i];
         }

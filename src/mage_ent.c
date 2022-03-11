@@ -1,8 +1,36 @@
+#include <SDL.h>
 #include "simple_logger.h"
 #include "mage_ent.h"
+Uint32 mage_attack(Uint32 interval,void *data)
+{
+    if(!data) return 0;
+    Entity *self = data;
+    if(!self->enemy) return 0;
+    if(shape_rect_circle_collision(self->range,self->enemy->bounding))
+    {
+        if(strcmp(gem_actor_get_current_action(self->actor)->name,"attack"))
+	    {
+				gem_actor_set_action(self->actor,"attack");
+	    }
+		self->enemy->health -= self->damage;
+    }
+    
+     self->blocked = 0;
+/*    SDL_Event event;*/
+/*    SDL_UserEvent userevent;*/
+/*    userevent.type = SDL_USEREVENT;*/
+/*    userevent.code = 0;*/
+/*    userevent.data1 = NULL;*/
+/*    userevent.data2 = NULL;*/
+
+/*    event.type = SDL_USEREVENT;*/
+/*    event.user = userevent;*/
+/*    SDL_PushEvent(&event);*/
+    return 0;
+}
 void mage_think(Entity *self)
 {
-    slog("%d",self->team);
+    //slog("%d",self->team);
 	    	if(self->health <= 0 )
 	{
 		//slog("%d",gem_actor_get_frames_remaining(self->actor));
@@ -20,21 +48,18 @@ void mage_think(Entity *self)
 		}
 		return;
 	}
+    if(!gem_actor_get_frames_remaining(self->actor)){gem_actor_set_action(self->actor,"idle");}
 	self->bounding = shape_rect_from_vector4d(vector4d(self->position.x,self->position.y,32,32));
 	self->range = shape_circle(self->position.x+16,self->position.y+16,self->range.r);
 	gf2d_draw_circle(vector2d(self->range.x,self->range.y),self->range.r,vector4d(0,255,0,255));
 	gf2d_draw_rect(shape_rect_to_sdl_rect(self->bounding),vector4d(0,255,0,255));
 	if(!self) return;
 	self->enemy = overlap(self);
-	if(self->enemy)
+	if(self->enemy && !self->blocked)
 	{
-	if(strcmp(gem_actor_get_current_action(self->actor)->name,"attack"))
-	{
-				gem_actor_set_action(self->actor,"attack");
-	}
-		self->enemy->health -= self->damage;
-				
-	}
+	    SDL_AddTimer(5000,mage_attack,self);
+        self->blocked = 1;
+    }
 	if(self->path && gfc_list_get_count(self->path->path))
 	{
 		if(strcmp(gem_actor_get_current_action(self->actor)->name,"move"))
@@ -97,6 +122,7 @@ Entity *mage_ent_new(Vector2D position,int fire_range)
     ent->damage = 10;
     ent->flip.x = 0;
     ent->flip.y = 0;
+    ent->blocked = 0;
     ent->health = 2000;
     ent->path = NULL;
     ent->dead = 0;

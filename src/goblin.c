@@ -3,11 +3,12 @@
 
 void goblin_think(Entity *self)
 {
+    slog("%d",self->health);
 	self->frame = (self->frame + 0.1);
     if (self->frame >= 10)self->frame = 0;
 	if(self->health <= 0 )
 	{
-		slog("%d",gem_actor_get_frames_remaining(self->actor));
+		//slog("%d",gem_actor_get_frames_remaining(self->actor));
 		if(!self->dead)
 		{
 			gem_actor_set_action(self->actor,"die");
@@ -35,7 +36,7 @@ void goblin_think(Entity *self)
 				gem_actor_set_action(self->actor,"attack");
 	}
 		self->enemy->health -= self->damage;
-		slog("%d", self->enemy->health);
+		//slog("%d", self->enemy->health);
 		
 	}
 	if(self->path && gfc_list_get_count(self->path->path))
