@@ -14,33 +14,33 @@ typedef struct
     Actor actor;
 }Mouse;
 
-static Mouse _mouse = {0};
+static Mouse mouse = {0};
 
 void mouse_set_action(char *action)
 {
-    gem_actor_set_action(&_mouse.actor,action);
+    gem_actor_set_action(&mouse.actor,action);
 }
 
 void mouse_load(char *actorFile)
 {
-    gem_actor_free(&_mouse.actor);
-    gem_actor_load(&_mouse.actor,actorFile);
+    gem_actor_free(&mouse.actor);
+    gem_actor_load(&mouse.actor,actorFile);
 }
 
 void mouse_update()
 {
     int x,y;
-    gem_actor_next_frame(&_mouse.actor);
-    memcpy(&_mouse.mouse[1],&_mouse.mouse[0],sizeof(MouseState));
-    _mouse.mouse[0].buttons = SDL_GetMouseState(&x,&y);
-    vector2d_set(_mouse.mouse[0].position,x,y);
+    gem_actor_next_frame(&mouse.actor);
+    memcpy(&mouse.mouse[1],&mouse.mouse[0],sizeof(MouseState));
+    mouse.mouse[0].buttons = SDL_GetMouseState(&x,&y);
+    vector2d_set(mouse.mouse[0].position,x,y);
 }
 
 void mouse_draw()
 {
     gem_actor_draw(
-    &_mouse.actor,
-    _mouse.mouse[0].position,
+    &mouse.actor,
+    mouse.mouse[0].position,
     NULL,
     NULL,
     NULL,
@@ -49,9 +49,9 @@ void mouse_draw()
 
 int mouse_moved()
 {
-    if ((_mouse.mouse[0].position.x != _mouse.mouse[1].position.x) ||
-        (_mouse.mouse[0].position.y != _mouse.mouse[1].position.y) ||
-        (_mouse.mouse[0].buttons != _mouse.mouse[1].buttons))
+    if ((mouse.mouse[0].position.x != mouse.mouse[1].position.x) ||
+        (mouse.mouse[0].position.y != mouse.mouse[1].position.y) ||
+        (mouse.mouse[0].buttons != mouse.mouse[1].buttons))
     {
         return 1;
     }
@@ -62,8 +62,8 @@ int mouse_button_pressed(int button)
 {
     int mask;
     mask = 1 << button;
-    if ((_mouse.mouse[0].buttons & mask) &&
-        !(_mouse.mouse[1].buttons & mask))
+    if ((mouse.mouse[0].buttons & mask) &&
+        !(mouse.mouse[1].buttons & mask))
     {
         return 1;
     }
@@ -74,8 +74,8 @@ int mouse_button_held(int button)
 {
     int mask;
     mask = 1 << button;
-    if ((_mouse.mouse[0].buttons & mask) &&
-        (_mouse.mouse[1].buttons & mask))
+    if ((mouse.mouse[0].buttons & mask) &&
+        (mouse.mouse[1].buttons & mask))
     {
         return 1;
     }
@@ -86,8 +86,8 @@ int mouse_button_released(int button)
 {
     int mask;
     mask = 1 << button;
-    if (!(_mouse.mouse[0].buttons & mask) &&
-        (_mouse.mouse[1].buttons & mask))
+    if (!(mouse.mouse[0].buttons & mask) &&
+        (mouse.mouse[1].buttons & mask))
     {
         return 1;
     }
@@ -98,24 +98,24 @@ int mouse_button_state(int button)
 {
     int mask;
     mask = 1 << button;
-    return (_mouse.mouse[0].buttons & mask);
+    return (mouse.mouse[0].buttons & mask);
 }
 
 Vector2D mouse_get_position()
 {
-    return _mouse.mouse[0].position;
+    return mouse.mouse[0].position;
 }
 
 Vector2D mouse_get_movement()
 {
     Vector2D dif;
-    vector2d_sub(dif,_mouse.mouse[0].position,_mouse.mouse[1].position);
+    vector2d_sub(dif,mouse.mouse[0].position,mouse.mouse[1].position);
     return dif;
 }
 
 int mouse_in_rect(ShapeRect r)
 {
-    return shape_point_in_rect(_mouse.mouse[0].position,r);
+    return shape_point_in_rect(mouse.mouse[0].position,r);
 }
 
 /*eol@eof*/

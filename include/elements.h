@@ -57,7 +57,7 @@ void element_draw(Element *element, Vector2D offset);
 
 List *element_update(Element *element, Vector2D offset);
 
-Element element_loaf_from_config(SJson *json);
+Element *element_load_from_config(SJson *json);
 
 ShapeRect element_get_absolute_bounds(Element *element, Vector2D offset);
 

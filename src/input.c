@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <stdio.h>
 #include "entity.h"
 #include "simple_logger.h"
 void check_inputs()
@@ -36,9 +37,8 @@ void check_inputs()
 							path_free(ent->path);
 							ent->path = NULL;
 						}
-						//slog("%d",ent->health);
 						Path *pat = path_new();
-						path_find(pat,mx,my,ent->position.x,ent->position.y,30);
+						path_find(pat,mx,my,ent->position.x,ent->position.y);
 						ent->path = pat;
 						}
 					}

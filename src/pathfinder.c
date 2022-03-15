@@ -1,15 +1,42 @@
 #include "pathfinder.h"
 #include "simple_logger.h"
 #include "algo.h"
+#include <string.h>
+#include <stdlib.h>
 typedef struct
 {
     Uint32 max_paths; 
     Path  *path_list;       
 }PathManager;
 
+typedef struct
+{
+Uint32 rows;
+Uint32 cols;
+int *path_map;
+}path_set;
 static PathManager path_manager = {0};
 
-	int tmp[960] = {0};
+static path_set tmp = {0};
+
+static path_set dumpy = {0};
+
+void set_path(int *arr,Uint32 rows,Uint32 cols)
+{
+	if(arr == NULL) return;
+	tmp.rows = rows;
+	tmp.cols = cols;
+	tmp.path_map = malloc(sizeof(int) * rows * cols);
+	memcpy(tmp.path_map,arr,sizeof(int)*rows*cols);
+	dumpy.rows = rows;
+	dumpy.cols = cols;
+	dumpy.path_map = malloc(sizeof(int) * rows * cols);
+	
+/*	for(int i = 0 ; i < rows*cols;i++)*/
+/*	{*/
+/*		slog("%d ",tmp.path_map[i]);*/
+/*	}*/
+}
 void path_manager_init(Uint32 max_paths)
 {
 	if(max_paths == 0)
@@ -27,6 +54,8 @@ void path_manager_init(Uint32 max_paths)
 void path_manager_close()
 {
 	path_manager_clear();
+	free(tmp.path_map);
+	free(dumpy.path_map);
 	free(path_manager.path_list);
 }
 void path_manager_clear()
@@ -69,33 +98,44 @@ Path *path_new()
     }
 	return NULL;
 }
-void path_find(Path* path,int srcx,int srcy,int dstx,int dsty,int scale)
+void path_find(Path* path,int srcx,int srcy,int dstx,int dsty)
 {
 	//slog("%d:%d,%d:%d",srcx/60,srcy/60,dstx/60,dsty/60);
-	int visited[960];
-	memset(visited,0,sizeof(visited));
-	
+	memset(dumpy.path_map,0,dumpy.rows*dumpy.cols*sizeof(int));
+	int scale = 1200 / dumpy.cols;
     if(path)
     {
-		path->path = BFS(tmp,visited,srcx/scale,srcy/scale,dstx/scale,dsty/scale,24,40);
-		slog("path found");
+		path->path = BFS(tmp.path_map,dumpy.path_map,srcx/scale,srcy/scale,dstx/scale,dsty/scale,dumpy.rows,dumpy.cols);
+		if(path->path)
+		{
+/*		for(int i = 0;i<gfc_list_get_count(path->path);i++)*/
+/*		{*/
+/*			Point *x = gfc_list_get_nth(path->path,i);*/
+/*			slog("%d:%d",x->x,x->y);*/
+/*		}*/
+		}
+/*		if(path->path==NULL)*/
+/*			slog("stuck");*/
     }
     return;
 }
-
-Vector2D travel_location(Path* path,float x, float y,int scale)
+Vector2D travel_location(Path* path,float x, float y)
 {
+	int scale = 1200 / dumpy.cols;
+	//slog("%d",scale);
 	int realx = x / scale;
 	int realy = y / scale;
 	float calcx;
 	float calcy;
-    if(!path->path)
+    if(!path)
     {
+    	//slog("dead");
     	return vector2d(0,0);
     }
     List *next = path->path;
     if(!next)
     {
+    	//slog("dead");
     	return vector2d(0,0);
     } 
     Point *local = gfc_list_get_nth(next,0);
@@ -106,7 +146,17 @@ Vector2D travel_location(Path* path,float x, float y,int scale)
     }
     if(!gfc_list_get_count(next)) 
     {
+    	calcx = realx * scale + scale * 0.5;
+    	calcy = realy * scale + scale * 0.5;
+    	if(abs(calcx-x) < (scale*.01) && abs(calcy-y) < (scale*.01))
+    	{
+    	//slog("kek");
     	return vector2d(0,0);
+    	}
+    	//slog("cringe");
+    	Vector2D res = vector2d(calcx-x,calcy-y);
+    	vector2d_set_magnitude(&res,1);
+    	return res;
     }
     //slog("pathing");
 /*    slog("x:%f,y:%f",local->x,local->y);*/

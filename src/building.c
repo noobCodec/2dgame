@@ -5,42 +5,72 @@
 #include "warrior.h"
 #include "rogue.h"
 #include "building.h"
+#include "game_instance.h"
 
-//TODO: transform if to switch
 void building_think(Entity *self)
 {
-    Entity *tmp = NULL;
-	if(self->build == 2)
+	if(self->health<0)
 	{
+		slog("free");
+		entity_free(self);
+	}
+    Entity *tmp = NULL;
+    game_instance *game = get_game(self->team);
+    if(!game) return;
+    int resources = game->resources;
+	if(self->build == 2 && resources >= 50)
+	{
+		game->resources -= 50;
 		tmp = mage_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),60);
 		self->build = 1;
 	}
-	else if(self->build == 3)
+	else if(self->build == 3 && resources >= 100)
 	{
+		game->resources -= 100;
 		tmp = goblin_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),15);
 		self->build = 1;
 	}
-	else if(self->build == 4)
+	else if(self->build == 4&& resources >= 150)
 	{
+		game->resources -= 150;
 		tmp = ranger_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),70);
 		self->build = 1;
 	}
-	else if(self->build == 5)
+	else if(self->build == 5&& resources >= 200)
 	{
+		game->resources -= 200;
 		tmp = warrior_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),30);
 		self->build = 1;
 	}
-	else if(self->build == 6)
+	else if(self->build == 6&& resources >= 250)
 	{
+		game->resources -= 250;
 		tmp = rogue_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),25);
 		self->build = 1;
 	}
+	else
+		self->build = 1;
     if(tmp){
     tmp->team = self->team;
-    slog("%d",tmp->team);
+    unit_append(game,tmp);
     }
+    self->old_health = self->health;
 }
-
+void building_draw(Entity *self)
+{
+	Vector2D drawPosition;
+	vector2d_add(drawPosition,self->position,self->draw_offset);
+	Entity_draw_hp(self);
+	gf2d_sprite_draw(
+        self->sprite,        
+        drawPosition,
+        &self->draw_scale,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        0);
+}
 Entity *building_ent_new(Vector2D position)
 {
     Entity *ent;
@@ -50,6 +80,9 @@ Entity *building_ent_new(Vector2D position)
         slog("no space for tents");
         return NULL;
     }
+    ent->health = 200;
+    ent->max_health = 200;
+    ent->draw = building_draw;
     ent->sprite = gf2d_sprite_load_image("images/buildings/tent-tan.png");
     ent->think = building_think;
     ent->draw_scale = vector2d(1,1);

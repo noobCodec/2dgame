@@ -20,7 +20,10 @@ void path_free(Path *path);
 
 Path *path_new();
 
-void path_find(Path *path,int srcx,int srcy,int dstx,int dsty,int scale);
+void path_find(Path *path,int srcx,int srcy,int dstx,int dsty);
 
-Vector2D travel_location(Path *path,float x, float y, int scale);
+Vector2D travel_location(Path *path,float x, float y);
+
+void set_path(int *arr,Uint32 rows,Uint32 cols);
+
 #endif

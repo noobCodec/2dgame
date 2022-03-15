@@ -1,6 +1,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "elements.h"
+#include "element_actor.h"
+#include "element_button.h"
+#include "element_list.h"
+
 #include "simple_logger.h"
 
 Element *element_new()
@@ -67,56 +71,63 @@ List * element_update(Element *e, Vector2D offset)
     return NULL;
 }
 
-/*Element *element_load_from_config(SJson *json)*/
-/*{*/
-/*    Element *e = NULL;*/
-/*    SJson *value;*/
-/*    const char *type;*/
-/*    Vector4D vector;*/
-/*    if (!sj_is_object(json))return NULL;*/
-/*    e = gf2d_element_new();*/
-/*    if (!e)return NULL;*/
-/*    value = sj_object_get_value(json,"name");*/
-/*    gf2d_line_cpy(e->name,sj_get_string_value(value));*/
-/*    */
-/*    value = sj_object_get_value(json,"id");*/
-/*    sj_get_integer_value(value,&e->index);*/
+Element *element_load_from_config(SJson *json)
+{
+	int x,y,z,k;
+	SJson *tmp;
+    Element *e = NULL;
+    SJson *value;
+    const char *type;
+    Vector4D vector;
+    if (!sj_is_object(json))return NULL;
+    e = element_new();
+    if (!e)return NULL;
+    value = sj_object_get_value(json,"name");
+    gfc_line_cpy(e->name,sj_get_string_value(value));
+    
+    value = sj_object_get_value(json,"id");
+    sj_get_integer_value(value,&e->index);
 
-/*    value = sj_object_get_value(json,"state");*/
-/*    sj_get_integer_value(value,&e->index);*/
+    value = sj_object_get_value(json,"state");
+    sj_get_integer_value(value,&e->index);
 
-/*    value = sj_object_get_value(json,"color");*/
-/*    vector4d_set(vector,255,255,255,255);*/
-/*    sj_value_as_vector4d(value,&vector);*/
-/*    e->color = gf2d_color_from_vector4(vector);*/
-/*        */
-/*    value = sj_object_get_value(json,"bounds");*/
-/*    sj_value_as_vector4d(value,&vector);*/
-/*    gf2d_rect_set(e->bounds,vector.x,vector.y,vector.z,vector.w);*/
-/*    */
-/*    value = sj_object_get_value(json,"type");*/
-/*    type = sj_get_string_value(value);*/
-/*    if (strcmp(type,"list") == 0)*/
-/*    {*/
-/*        gf2d_element_load_list_from_config(e,json);*/
-/*    }*/
-/*    else if (strcmp(type,"label") == 0)*/
-/*    {*/
-/*        gf2d_element_load_label_from_config(e,json);*/
-/*    }*/
-/*    else if (strcmp(type,"actor") == 0)*/
-/*    {*/
-/*        gf2d_element_load_actor_from_config(e,json);*/
-/*    }*/
-/*    else if (strcmp(type,"button") == 0)*/
-/*    {*/
-/*        gf2d_element_load_button_from_config(e,json);*/
-/*    }*/
-/*    else if (strcmp(type,"percent") == 0)*/
-/*    {*/
-/*    }*/
-/*    return e;*/
-/*}*/
+    tmp = sj_object_get_value(json,"color");
+    vector4d_set(vector,255,255,255,255);
+    sj_get_integer_value(sj_array_get_nth(tmp,0),&x);
+    sj_get_integer_value(sj_array_get_nth(tmp,1),&y);
+    sj_get_integer_value(sj_array_get_nth(tmp,2),&z);
+    sj_get_integer_value(sj_array_get_nth(tmp,3),&k);
+    vector = vector4d(x,y,z,k);
+    e->color = gfc_color_from_vector4(vector);
+        
+    tmp = sj_object_get_value(json,"bounds");
+    sj_get_integer_value(sj_array_get_nth(tmp,0),&x);
+    sj_get_integer_value(sj_array_get_nth(tmp,1),&y);
+    sj_get_integer_value(sj_array_get_nth(tmp,2),&z);
+    sj_get_integer_value(sj_array_get_nth(tmp,3),&k);
+    vector = vector4d(x,y,z,k);
+    gfc_rect_set(e->bounds,vector.x,vector.y,vector.z,vector.w);
+    
+    value = sj_object_get_value(json,"type");
+    type = sj_get_string_value(value);
+    if (strcmp(type,"list") == 0)
+    {
+        element_load_list_from_config(e,json);
+    }
+    else if (strcmp(type,"label") == 0)
+    {
+        element_load_label_from_config(e,json);
+    }
+    else if (strcmp(type,"actor") == 0)
+    {
+        element_load_actor_from_config(e,json);
+    }
+    else if (strcmp(type,"button") == 0)
+    {
+        element_load_button_from_config(e,json);
+    }
+    return e;
+}
 
 ShapeRect element_get_absolute_bounds(Element *element,Vector2D offset)
 {

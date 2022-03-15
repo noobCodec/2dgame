@@ -16,9 +16,14 @@ typedef struct ENTITY_S
     Uint8       blocked;
     Uint8 		dead;
     Uint8		damage;
-    SDL_TimerID time;
+    Uint8		harvest;
     Uint8       team;
+    Uint8		inflict;
+    Uint8		type;
+    Uint8		effects;
+    int			old_health;
     int			health;
+    int			max_health;
     Sprite     *sprite;     /**<sprite used to draw the sprite*/
     float       frame;      /**<current frame to draw*/
     Vector2D    draw_offset;/**<draw position relative to the entity position*/
@@ -82,5 +87,11 @@ void entity_free(Entity *entity);
 List* entity_click(int mx, int my,int d,int k);
 
 Entity* overlap(Entity *entity);
+
+void Entity_draw_hp(Entity *ent);
+
+List* resources();
+
+List* touch(Entity *self);
 
 #endif

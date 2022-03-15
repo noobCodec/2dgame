@@ -27,6 +27,7 @@ List* backtrack(Point *x)
 }
 List* BFS(int *grid,int *visited,int row,int col,int goal_row, int goal_col,int col_size,int row_size)
 {
+	if(grid[row*col_size+col]==-1 || grid[goal_row*col_size+goal_col]==-1) return NULL;
 	List *q = gfc_list_new();
 	List *tobefreed = gfc_list_new();
 	int length = row_size;

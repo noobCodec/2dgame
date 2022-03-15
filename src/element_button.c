@@ -35,6 +35,7 @@ void element_button_draw(Element *element,Vector2D offset)
 
 List *element_button_update(Element *element,Vector2D offset)
 {
+	
     Actor *actor;
     ShapeRect bounds;
     List *list;
@@ -50,6 +51,7 @@ List *element_button_update(Element *element,Vector2D offset)
         element->state = ES_HIGHLIGHT;
         if (mouse_button_state(0))
         {
+        	
             element->state = ES_ACTIVE;
         }
         else if (mouse_button_released(0))
@@ -116,44 +118,47 @@ ButtonElement *element_button_new_full(Element *label,Element *actor,Color highC
     return button;
 }
 
-/*void element_load_button_from_config(Element *e,SJson *json)*/
-/*{*/
-/*    Vector4D highColor = {255,255,255,255},pressColor = {255,255,255,255};*/
-/*    Element *label = NULL;*/
-/*    Element *actor = NULL;*/
-/*    SJson *value;*/
-/*    */
-/*    if ((!e) || (!json))*/
-/*    {*/
-/*        slog("call missing parameters");*/
-/*        return;*/
-/*    }*/
-/*    */
-/*    value = sj_object_get_value(json,"highColor");*/
-/*    if (!sj_value_as_vector4d(value,&highColor))*/
-/*    {*/
-/*        slog("highColor not provided");*/
-/*    }*/
+void element_load_button_from_config(Element *e,SJson *json)
+{
+	int x,y,z,k;
+	SJson *tmp = NULL;
+    Vector4D highColor = {255,255,255,255},pressColor = {255,255,255,255};
+    Element *label = NULL;
+    Element *actor = NULL;
+    SJson *value;
+    
+    if ((!e) || (!json))
+    {
+        slog("call missing parameters");
+        return;
+    }
+    
+    tmp = sj_object_get_value(json,"highColor");
+    sj_get_integer_value(sj_array_get_nth(tmp,0),&x);
+    sj_get_integer_value(sj_array_get_nth(tmp,1),&y);
+    sj_get_integer_value(sj_array_get_nth(tmp,2),&z);
+    sj_get_integer_value(sj_array_get_nth(tmp,3),&k);
+    highColor = vector4d(x,y,z,k);
+	tmp = sj_object_get_value(json,"pressColor");
+    sj_get_integer_value(sj_array_get_nth(tmp,0),&x);
+    sj_get_integer_value(sj_array_get_nth(tmp,1),&y);
+    sj_get_integer_value(sj_array_get_nth(tmp,2),&z);
+    sj_get_integer_value(sj_array_get_nth(tmp,3),&k);
+    pressColor = vector4d(x,y,z,k);
 
-/*    value = sj_object_get_value(json,"pressColor");*/
-/*    if (!sj_value_as_vector4d(value,&pressColor))*/
-/*    {*/
-/*        slog("pressColor not provided");*/
-/*    }*/
 
-
-/*    value = sj_object_get_value(json,"label");*/
-/*    if (value)*/
-/*    {*/
-/*        label = element_load_from_config(value);*/
-/*    }*/
-/*    value = sj_object_get_value(json,"actor");*/
-/*    if (value)*/
-/*    {*/
-/*        actor = element_load_from_config(value);*/
-/*    }*/
-/*    element_make_button(e,element_button_new_full(label,actor,color_from_vector4(highColor),color_from_vector4(pressColor)));*/
-/*}*/
+    value = sj_object_get_value(json,"label");
+    if (value)
+    {
+        label = element_load_from_config(value);
+    }
+    value = sj_object_get_value(json,"actor");
+    if (value)
+    {
+        actor = element_load_from_config(value);
+    }
+    element_make_button(e,element_button_new_full(label,actor,gfc_color_from_vector4(highColor),gfc_color_from_vector4(pressColor)));
+}
 
 
 /*eol@eof*/

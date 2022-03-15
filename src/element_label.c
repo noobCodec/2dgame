@@ -103,100 +103,105 @@ void element_make_label(Element *e,LabelElement *label)
     e->free_data = element_label_free;
 }
 
-/*void gf2d_element_load_label_from_config(Element *e,SJson *json)*/
-/*{*/
-/*    SJson *value;*/
-/*    Vector4D vector;*/
-/*    Color color;*/
-/*    const char *buffer;*/
-/*    int style = FT_Normal;*/
-/*    int justify = LJ_Left;  */
-/*    int align = LA_Top;*/
-/*    if ((!e) || (!json))*/
-/*    {*/
-/*        slog("call missing parameters");*/
-/*        return;*/
-/*    }*/
-/*    value = sj_object_get_value(json,"style");*/
-/*    buffer = sj_get_string_value(value);*/
-/*    if (buffer)*/
-/*    {*/
-/*        if (strcmp(buffer,"normal") == 0)*/
-/*        {*/
-/*            style = FT_Normal;*/
-/*        }*/
-/*        else if (strcmp(buffer,"small") == 0)*/
-/*        {*/
-/*            style = FT_Small;*/
-/*        }*/
-/*        else if (strcmp(buffer,"H1") == 0)*/
-/*        {*/
-/*            style = FT_H1;*/
-/*        }*/
-/*        else if (strcmp(buffer,"H2") == 0)*/
-/*        {*/
-/*            style = FT_H2;*/
-/*        }*/
-/*        else if (strcmp(buffer,"H3") == 0)*/
-/*        {*/
-/*            style = FT_H3;*/
-/*        }*/
-/*        else if (strcmp(buffer,"H4") == 0)*/
-/*        {*/
-/*            style = FT_H4;*/
-/*        }*/
-/*        else if (strcmp(buffer,"H5") == 0)*/
-/*        {*/
-/*            style = FT_H5;*/
-/*        }*/
-/*        else if (strcmp(buffer,"H6") == 0)*/
-/*        {*/
-/*        style = FT_H6;*/
-/*        }*/
-/*    }*/
+void element_load_label_from_config(Element *e,SJson *json)
+{
+	int x,y,z,k;
+    SJson *value;
+    Vector4D vector;
+    Color color;
+    const char *buffer;
+    int style = FT_Normal;
+    int justify = LJ_Left;  
+    int align = LA_Top;
+    if ((!e) || (!json))
+    {
+        slog("call missing parameters");
+        return;
+    }
+    value = sj_object_get_value(json,"style");
+    buffer = sj_get_string_value(value);
+    if (buffer)
+    {
+        if (strcmp(buffer,"normal") == 0)
+        {
+            style = FT_Normal;
+        }
+        else if (strcmp(buffer,"small") == 0)
+        {
+            style = FT_Small;
+        }
+        else if (strcmp(buffer,"H1") == 0)
+        {
+            style = FT_H1;
+        }
+        else if (strcmp(buffer,"H2") == 0)
+        {
+            style = FT_H2;
+        }
+        else if (strcmp(buffer,"H3") == 0)
+        {
+            style = FT_H3;
+        }
+        else if (strcmp(buffer,"H4") == 0)
+        {
+            style = FT_H4;
+        }
+        else if (strcmp(buffer,"H5") == 0)
+        {
+            style = FT_H5;
+        }
+        else if (strcmp(buffer,"H6") == 0)
+        {
+        style = FT_H6;
+        }
+    }
 
-/*    value = sj_object_get_value(json,"justify");*/
-/*    buffer = sj_get_string_value(value);*/
-/*    if (buffer)*/
-/*    {*/
-/*        if (strcmp(buffer,"left") == 0)*/
-/*        {*/
-/*            justify = LJ_Left;*/
-/*        }*/
-/*        else if (strcmp(buffer,"center") == 0)*/
-/*        {*/
-/*            justify = LJ_Center;*/
-/*        }*/
-/*        else if (strcmp(buffer,"right") == 0)*/
-/*        {*/
-/*            justify = LJ_Right;*/
-/*        }*/
-/*    }*/
+    value = sj_object_get_value(json,"justify");
+    buffer = sj_get_string_value(value);
+    if (buffer)
+    {
+        if (strcmp(buffer,"left") == 0)
+        {
+            justify = LJ_Left;
+        }
+        else if (strcmp(buffer,"center") == 0)
+        {
+            justify = LJ_Center;
+        }
+        else if (strcmp(buffer,"right") == 0)
+        {
+            justify = LJ_Right;
+        }
+    }
 
-/*    value = sj_object_get_value(json,"align");*/
-/*    buffer = sj_get_string_value(value);*/
-/*    if (buffer)*/
-/*    {*/
-/*        if (strcmp(buffer,"top") == 0)*/
-/*        {*/
-/*            align = LA_Top;*/
-/*        }*/
-/*        else if (strcmp(buffer,"middle") == 0)*/
-/*        {*/
-/*            align = LA_Middle;*/
-/*        }*/
-/*        else if (strcmp(buffer,"bottom") == 0)*/
-/*        {*/
-/*            align = LA_Bottom;*/
-/*        }*/
-/*    }*/
-/*    value = sj_object_get_value(json,"color");*/
-/*    vector4d_set(vector,255,255,255,255);*/
-/*    sj_value_as_vector4d(value,&vector);*/
-/*    color = gf2d_color_from_vector4(vector);*/
+    value = sj_object_get_value(json,"align");
+    buffer = sj_get_string_value(value);
+    if (buffer)
+    {
+        if (strcmp(buffer,"top") == 0)
+        {
+            align = LA_Top;
+        }
+        else if (strcmp(buffer,"middle") == 0)
+        {
+            align = LA_Middle;
+        }
+        else if (strcmp(buffer,"bottom") == 0)
+        {
+            align = LA_Bottom;
+        }
+    }
+    value = sj_object_get_value(json,"color");
+    sj_get_integer_value(sj_array_get_nth(value,0),&x);
+    sj_get_integer_value(sj_array_get_nth(value,1),&y);
+    sj_get_integer_value(sj_array_get_nth(value,2),&z);
+    sj_get_integer_value(sj_array_get_nth(value,3),&k);
+    vector4d_set(vector,255,255,255,255);
+    vector = vector4d(x,y,z,k);
+    color = gfc_color_from_vector4(vector);
 
-/*    value = sj_object_get_value(json,"text");*/
-/*    buffer = sj_get_string_value(value);*/
-/*    gf2d_element_make_label(e,gf2d_element_label_new_full((char *)buffer,color,style,justify,align));*/
-/*}*/
+    value = sj_object_get_value(json,"text");
+    buffer = sj_get_string_value(value);
+    element_make_label(e,element_label_new_full((char *)buffer,color,style,justify,align));
+}
 

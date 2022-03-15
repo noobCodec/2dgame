@@ -63,6 +63,8 @@ ActorElement *element_actor_new_full(char *actorFile)
         return NULL;
     }
     gem_actor_load(&ae->actor,actorFile);
+    if(!ae->actor.al)
+    	return NULL;
     vector2d_copy(ae->scale,ae->actor.al->scale);
     return ae;
 }

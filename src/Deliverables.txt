@@ -1,14 +1,19 @@
-5 different units to control
+5 different units to control -- DONE
 
 5 world features to impact gameplay
+	Mountains
+	Heal_Zone
+	Damage_Zone
+	Slow_Zone
+	Fast_Zone
 
-AI to control enemy team
+AI to control enemy team -- DONE
     Deterministic no Trees
 
 Unit AI to follow basic orders and path find --DONE
     Attack/Idle/Move
 
-Basic buildings and resource gathering
+Basic buildings and resource gathering -- DONE
 
 Functioning Entity System --DONE
 
