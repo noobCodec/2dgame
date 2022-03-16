@@ -3,6 +3,7 @@
 #include "mouse.h"
 #include "simple_logger.h"
 #include "gfc_list.h"
+#include "gf2d_draw.h"
 
 void element_button_draw(Element *element,Vector2D offset)
 {
@@ -46,6 +47,7 @@ List *element_button_update(Element *element,Vector2D offset)
     actor = element_actor_get_actor(button->actor);
     gem_actor_next_frame(actor);
     bounds = element_get_absolute_bounds(element,offset);
+    gf2d_draw_rect(shape_rect_to_sdl_rect(bounds),vector4d(255,0,255,255));
     if(mouse_in_rect(bounds))
     {
         element->state = ES_HIGHLIGHT;

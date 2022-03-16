@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "element_actor.h"
 #include "simple_logger.h"
-
+#include "gf2d_draw.h"
 void element_actor_draw(Element *element, Vector2D offset)
 {
 	ActorElement* actor;
@@ -10,6 +10,7 @@ void element_actor_draw(Element *element, Vector2D offset)
 	if(!element) return;
 	actor = (ActorElement*)element->data;
 	if(!actor) return;
+	
 	vector2d_add(position,offset,vector2d(element->bounds.x,element->bounds.y));
 	gem_actor_draw(
 		&actor->actor,

@@ -4,6 +4,7 @@
 #include "element_actor.h"
 #include "element_button.h"
 #include "element_list.h"
+#include "element_label.h"
 
 #include "simple_logger.h"
 

@@ -8,14 +8,12 @@ void element_label_draw(Element *element,Vector2D offset)
 {
     LabelElement *label;
     Vector2D position;
-    Font *char_font = font_load("images/text.ttf",32);
+    Font *char_font = font_load("images/text.ttf",16);
     Vector2D size = {0};
     if (!element)return;
     label = (LabelElement*)element->data;
     if (!label)return;
-    //TODO: FIX THIS
-    //size = gfc_text_get_bounds(label->text,label->style);
-    size = vector2d(5,5);
+    size = font_get_bounds(label->text,char_font);
     if (size.x < 0)
     {
         return;
@@ -44,6 +42,7 @@ void element_label_draw(Element *element,Vector2D offset)
             position.y += (element->bounds.h - size.y);
             break;
     }
+    //slog("%f:%f",position.x,position.y);
     font_render(char_font,label->text,position,element->color);
 }
 

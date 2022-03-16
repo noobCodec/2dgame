@@ -21,6 +21,14 @@ Uint32 goblin_attack(Uint32 interval,void *data)
 }
 void goblin_think(Entity *self)
 {
+	if(self->effects & 8 && self->health < self->max_health)
+	{
+		self->health += 1;
+	}
+	else if(self->effects & 16)
+	{
+		self->health -= 1;
+	}
     //gf2d_draw_pixel(self->position,vector4d(0,255,255,255));
     //slog("%d",self->team);
 	    	if(self->health <= 0 )
@@ -53,6 +61,16 @@ void goblin_think(Entity *self)
         self->blocked = 1;
     }
     Vector2D out = travel_location(self->path,self->position.x,self->position.y);
+    if(self->effects & 2)
+	{
+		out.x *=2;
+		out.y *=2;
+	}
+	else if(self->effects & 4)
+	{
+		out.x /=2;
+		out.y /=2;
+	}
     //slog("%f:%f",out.x,out.y);
 	if(out.x!=0 || out.y!=0)
 	{
@@ -85,6 +103,7 @@ void goblin_think(Entity *self)
 			gem_actor_set_action(self->actor,"idle");
 		}
 	}
+	self->effects = 0;
 }
 void goblin_draw(Entity *self)
 {

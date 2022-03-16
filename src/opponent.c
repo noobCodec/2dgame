@@ -7,7 +7,8 @@ typedef enum
 	ATTACK,
 	DEFEND,
 	HARVEST,
-	WON
+	WON,
+	LOST
 } states;
 static game_instance *computer = NULL;
 static game_instance *player = NULL;
@@ -20,7 +21,10 @@ void opponent_init(game_instance *game_t,game_instance *player_t)
 	computer = game_t;
 	player = player_t;
 }
-
+int game_state()
+{
+	return state;
+}
 
 void opponent_think()
 {
@@ -102,7 +106,7 @@ void opponent_think()
 		Entity *enemy_base = gfc_list_get_nth(player->buildings,0);
 		if(!enemy_base)
 		{
-		state = WON;
+		state = LOST;
 		return;
 		}
 		for(int i =0; i<gfc_list_get_count(computer->units);i++)

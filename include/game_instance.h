@@ -42,4 +42,6 @@ void unit_append(game_instance *g, Entity *unit);
 void building_append(game_instance *g,Entity *building);
 
 void unit_remove(game_instance *g,Entity *unit);
+
+void building_remove(game_instance *g,Entity *building);
 #endif

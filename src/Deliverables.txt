@@ -8,7 +8,6 @@
 	Fast_Zone
 
 AI to control enemy team -- DONE
-    Deterministic no Trees
 
 Unit AI to follow basic orders and path find --DONE
     Attack/Idle/Move

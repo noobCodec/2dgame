@@ -107,6 +107,12 @@ void building_append(game_instance *g,Entity *building)
 	g->buildings = local;
 }
 
+void building_remove(game_instance *g,Entity *building)
+{
+	List *local = g->buildings;
+	gfc_list_delete_data(local,building);
+}
+
 void game_free(game_instance *g)
 {
     if (g == NULL)

@@ -4,4 +4,5 @@
 
 Entity *building_ent_new(Vector2D position);
 
+Entity *other_building_ent_new(Vector2D position);
 #endif

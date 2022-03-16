@@ -26,6 +26,23 @@
 #include "load_obstacles.h"
 #include "simple_json.h"
 #include "elements.h"
+static int enabled = 1;
+void showStuff(Element *e, Element *e2)
+{
+	element_draw(e,vector2d(500,650));
+    element_draw(e2,vector2d(650,650));
+    List* restart = element_update(e,vector2d(500,650));
+    if(gfc_list_get_count(restart))
+    {
+    	exit(4);
+    }
+    restart = element_update(e2,vector2d(650,650));
+    if(gfc_list_get_count(restart))
+    {
+    	exit(0);
+    }
+}
+
 
 int main(int argc, char * argv[])
 {
@@ -66,20 +83,27 @@ init_logger("gf2d.log");
 	load_obstacles(tilemap);
 	char *out = malloc(14 * sizeof(char));
 	char *out2 = malloc(14 * sizeof(char));
-	SJson *json = sj_load("level/input.json");
+	SJson *json = sj_load("level/restart.json");
 	Element *e = NULL;
 	if(json)
 	{
 		e = element_load_from_config(json);
 	}
+	json = sj_load("level/quit.json");
+	Element *e2 = NULL;
+	if(json)
+	{
+		e2 = element_load_from_config(json);
+	}
 	//new_damage_zone(vector2d(40,40),5);
 	Font *char_font = font_load("images/text.ttf",12);
+	Font *game_font = font_load("images/text.ttf",64);
 	game_manager_init(12);
 	//Path_Map_debug(path);
 	game_instance *opp = game_new(0);
 	game_instance *player = game_new(1);
 	opponent_init(opp,player);
-	
+	//other_building_ent_new(vector2d(650,650));
     while(!done)
     {
         SDL_PumpEvents();
@@ -87,6 +111,7 @@ init_logger("gf2d.log");
         mouse_update();
         //SDL_GetMouseState(&mx,&my);
         //resources++;
+        
         sprintf(out,"%s%d","Resources: ",player->resources);
         sprintf(out2,"%s%d","Opponent Resources: ",opp->resources);
         gf2d_graphics_clear_screen();
@@ -94,9 +119,16 @@ init_logger("gf2d.log");
         entity_manager_think_all();
         entity_manager_draw_all();
         check_inputs();
-        element_draw(e,vector2d(700,80));
-        font_render(char_font,out2,vector2d(200,700),gfc_color_from_vector4(vector4d(255,255,0,255)));
-        font_render(char_font,out,vector2d(400,700),gfc_color_from_vector4(vector4d(255,255,0,255)));
+        if(game_state() == 3 )
+        {
+        	font_render(game_font,"YOU WON",vector2d(600,300),gfc_color_from_vector4(vector4d(0,255,0,255)));
+        }
+        else if(game_state()==4)
+        {
+        	font_render(game_font,"YOU LOST",vector2d(600,300),gfc_color_from_vector4(vector4d(255,0,0,255)));
+        }
+        font_render(char_font,out2,vector2d(200,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
+        font_render(char_font,out,vector2d(400,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
      	/*gf2d_sprite_draw(
                 mouse,
                 vector2d(mx,my),
@@ -107,13 +139,19 @@ init_logger("gf2d.log");
                 &mouseColor,
                 (int)mf);
         */
-        element_update(e,vector2d(700,20));
+        if(enabled==-1)
+        {
+        	showStuff(e,e2);
+        }
+        if (keys[SDL_SCANCODE_F1])enabled =-1;
+        if (keys[SDL_SCANCODE_F2])enabled =1;
         opponent_think();
         mouse_draw();
         gf2d_grahics_next_frame();
-                
         if (keys[SDL_SCANCODE_ESCAPE])done = 1;
     }
+    free(out);
+    free(out2);
     Path_Map_free(path);
     slog("---==== END ====---");
     return 0;

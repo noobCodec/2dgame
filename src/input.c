@@ -118,6 +118,15 @@ void check_inputs()
 									}
 								}
 						break;
+					case SDLK_h:
+						for(int i =0; i<gfc_list_get_count(ents);i++)
+								{
+									ent = gfc_list_get_nth(ents,i);
+									if(ent->build==1)
+									{
+										ent->build = 7;
+									}
+								}
 						
 				}
 		    }
