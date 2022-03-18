@@ -26,4 +26,8 @@ Vector2D travel_location(Path *path,float x, float y);
 
 void set_path(int *arr,Uint32 rows,Uint32 cols);
 
+int get_rows();
+
+int get_cols();
+
 #endif

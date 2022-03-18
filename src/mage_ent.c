@@ -18,16 +18,18 @@ Uint32 mage_attack(Uint32 interval,void *data)
 		self->enemy->health -= self->damage;
 		self->enemy->inflict = self->team;
     }
-/*    SDL_Event event;*/
-/*    SDL_UserEvent userevent;*/
-/*    userevent.type = SDL_USEREVENT;*/
-/*    userevent.code = 0;*/
-/*    userevent.data1 = NULL;*/
-/*    userevent.data2 = NULL;*/
-
-/*    event.type = SDL_USEREVENT;*/
-/*    event.user = userevent;*/
-/*    SDL_PushEvent(&event);*/
+	if(self->path)
+	{
+		path_free(self->path);
+		self->velocity = vector2d(0,0);
+		self->path = NULL;
+	}
+		Path *pat = path_new();
+		Vector2D vec = vector2d(-1*self->position.x-self->enemy->position.x,-1 *self->position.y-self->enemy->position.y);
+		vector2d_set_magnitude(&vec,-20);
+		path_find(pat,self->position.x + vec.x,self->position.y+vec.y,self->position.x,self->position.y);
+		self->path = pat;
+	
     return 0;
 }
 void mage_think(Entity *self)
@@ -73,7 +75,6 @@ void mage_think(Entity *self)
         self->blocked = 1;
     }
     Vector2D out = travel_location(self->path,self->position.x,self->position.y);
-    //slog("%d",self->effects);
 	if(self->effects & 2)
 	{
 		out.x *=2;
@@ -84,7 +85,6 @@ void mage_think(Entity *self)
 		out.x /=2;
 		out.y /=2;
 	}
-    //slog("%f:%f",out.x,out.y);
 	if(out.x!=0 || out.y!=0)
 	{
 		if(strcmp(gem_actor_get_current_action(self->actor)->name,"move"))
@@ -99,12 +99,10 @@ void mage_think(Entity *self)
 	}
 	else if(self->path && out.x ==0 && out.y==0)
 	{
-		//slog("freed");
 		if(strcmp(gem_actor_get_current_action(self->actor)->name,"idle"))
 		{
 					gem_actor_set_action(self->actor,"idle");
 		}
-		//slog("freed");
 		path_free(self->path);
 		self->velocity = vector2d(0,0);
 		self->path = NULL;
@@ -151,7 +149,7 @@ Entity *mage_ent_new(Vector2D position,int fire_range)
     ent->draw_offset.y = -16;
     ent->rotation.x = 16;
     ent->rotation.y = 16;
-    ent->damage = 10;
+    ent->damage = 50;
     ent->flip.x = 0;
     ent->flip.y = 0;
     ent->blocked = 0;

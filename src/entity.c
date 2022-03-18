@@ -179,6 +179,27 @@ List* resources()
     }
     return nodes;
 }
+Entity* heal(Entity *self)
+{
+	float dist = 9999;
+	float calculated = 0;
+	Entity* heal = NULL;
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
+    {
+        Entity *node = &entity_manager.entity_list[i];
+        if(node->type == 3)
+        {
+			calculated = vector2d_magnitude_between(self->position,node->position);
+			if(dist > calculated)
+			{
+				heal = node;
+				dist = calculated; 
+			}
+		}
+    }
+    return heal;
+}
 List* touch(Entity *self)
 {
 	List *nodes = gfc_list_new(4);

@@ -29,6 +29,19 @@ void rogue_think(Entity *self)
 	{
 		self->health -= 1;
 	}
+	if(self->health<100)
+	{
+		if(self->path)
+		{
+		path_free(self->path);
+		self->velocity = vector2d(0,0);
+		self->path = NULL;
+		}
+		Path *pat = path_new();
+		Entity *closest_heal = heal(self);
+		path_find(pat,closest_heal->position.x,closest_heal->position.y,self->position.x,self->position.y);
+		self->path = pat;
+	}
 	//gf2d_draw_pixel(self->position,vector4d(0,255,255,255));
     //slog("%d",self->team);
 	    	if(self->health <= 0 )

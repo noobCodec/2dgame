@@ -21,6 +21,15 @@ static path_set tmp = {0};
 
 static path_set dumpy = {0};
 
+int get_rows()
+{
+return tmp.rows;
+}
+int get_cols()
+{
+return tmp.cols;
+}
+
 void set_path(int *arr,Uint32 rows,Uint32 cols)
 {
 	if(arr == NULL) return;

@@ -93,5 +93,6 @@ void Entity_draw_hp(Entity *ent);
 List* resources();
 
 List* touch(Entity *self);
+Entity* heal(Entity *self);
 
 #endif

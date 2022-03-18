@@ -17,6 +17,15 @@ Uint32 warrior_attack(Uint32 interval,void *data)
 		self->enemy->health -= self->damage;
 		self->enemy->inflict = self->team;
     }
+    if(self->path)
+	{
+		path_free(self->path);
+		self->velocity = vector2d(0,0);
+		self->path = NULL;
+	}
+		Path *pat = path_new();
+		path_find(pat,self->enemy->position.x,self->enemy->position.y,self->position.x,self->position.y);
+		self->path = pat;
     return 0;
 }
 void warrior_think(Entity *self)
