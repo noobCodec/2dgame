@@ -1,3 +1,7 @@
+#ifndef __CAMERA_H__
+#define __CAMERA_H__
+
+
 #include "gfc_types.h"
 #include "gfc_vector.h"
 
@@ -55,3 +59,5 @@ SDL_Rect camera_get_rect();
  * @return the inverse of the camera coordinates
  */
 Vector2D camera_get_offset();
+
+#endif

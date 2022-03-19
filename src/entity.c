@@ -1,7 +1,7 @@
 
 #include "simple_logger.h"
 #include "entity.h"
-
+#include "game_instance.h"
 typedef struct
 {
     Uint32 max_entities;            /**<how many entities exist*/
@@ -23,6 +23,8 @@ void entity_manager_close()
 
 void entity_manager_init(Uint32 max_entities)
 {
+	gf2d_sprite_load_image("images/blood.png");
+	gf2d_sprite_load_image("images/white.png");
     if (max_entities == 0)
     {
         slog("cannot allocate memory for zero entities!");
@@ -137,6 +139,12 @@ void entity_free(Entity *entity)
     {
         gf2d_sprite_free(entity->sprite);
     }
+    if(!entity->build)
+    {
+    	game_instance *ptr = get_game(entity->team);
+    	if(ptr && ptr->units)
+    		unit_remove(ptr,entity);
+    }
     memset(entity,0,sizeof(Entity));
 }
 
@@ -157,21 +165,116 @@ List* entity_click(int mx, int my,int init_x,int init_y)
     }
     return touched;
 }
+List* resources()
+{
+	List *nodes = gfc_list_new(4);
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
+    {
+        Entity* other = &entity_manager.entity_list[i];
+        if(other->harvest == 1)
+        {
+        	gfc_list_append(nodes,other);
+        }
+    }
+    return nodes;
+}
+Entity* heal(Entity *self)
+{
+	float dist = 9999;
+	float calculated = 0;
+	Entity* heal = NULL;
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
+    {
+        Entity *node = &entity_manager.entity_list[i];
+        if(node->type == 3)
+        {
+			calculated = vector2d_magnitude_between(self->position,node->position);
+			if(dist > calculated)
+			{
+				heal = node;
+				dist = calculated; 
+			}
+		}
+    }
+    return heal;
+}
+List* touch(Entity *self)
+{
+	List *nodes = gfc_list_new(4);
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
+    {
+        Entity* other = &entity_manager.entity_list[i];
+        if(shape_rect_collision(self->bounding,other->bounding) && other!=self)
+        {
+        	gfc_list_append(nodes,other);
+        }
+    }
+    return nodes;
+}
 Entity* overlap(Entity *ent)
 {
     int i;
+    Entity *ret = NULL;
     for (i = 0;i < entity_manager.max_entities;i++)
     {
     	
         if (!entity_manager.entity_list[i]._inuse)continue;
         if ((&entity_manager.entity_list[i].range)==NULL)continue;
         Entity* other = &entity_manager.entity_list[i];
-        if(ent->team != other->team && ent != other && other->damage && shape_rect_circle_collision(ent->range,other->bounding))
+        if(ent->team != other->team && ent != other && shape_rect_circle_collision(ent->range,other->bounding))
         {
-        	return &entity_manager.entity_list[i];
+			ret = &entity_manager.entity_list[i]; 
+        	if(other->harvest==0)
+        	{
+        		return &entity_manager.entity_list[i];
+        	}
         }
     }
-    return NULL;
+    return ret;
 }
-
+void Entity_draw_hp(Entity *self)
+{
+	Vector2D drawPosition;
+	Vector4D opacity = vector4d(255,255,255,255);
+	if(self->actor)
+    vector2d_add(drawPosition,self->position,self->actor->al->drawOffset);
+    else
+    vector2d_add(drawPosition,self->position,self->draw_offset);
+    Vector2D scaler = vector2d(1,1);
+    if(self->build)
+    {
+    	scaler.x = 4;
+    	scaler.y = 3;
+    	drawPosition.x+=20;
+    	drawPosition.y-=20;
+    }
+    drawPosition.y -= 5;
+	Sprite *sprite1 = NULL;
+    Sprite *sprite2 = NULL;
+    float hp_off = self->health/(float)self->max_health;
+    Vector2D vec = vector2d(scaler.x*hp_off,scaler.y);
+    sprite1 = gf2d_sprite_load_image("images/white.png");
+	sprite2 = gf2d_sprite_load_image("images/blood.png");
+	gf2d_sprite_draw(
+        sprite1,        
+        drawPosition,
+        &scaler,
+        NULL,
+        NULL,
+        NULL,
+        &opacity,
+        0);
+	gf2d_sprite_draw(
+        sprite2,        
+        drawPosition,
+        &vec,
+        NULL,
+        NULL,
+        NULL,
+        &opacity,
+        0);
+}
 // eof

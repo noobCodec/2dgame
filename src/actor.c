@@ -413,15 +413,15 @@ void gem_actor_draw(
     }
     
     vector2d_add(drawPosition,position,actor->al->drawOffset);
-    gf2d_sprite_draw(
-        actor->sprite,
-        drawPosition,
-        &drawScale,
-        scaleCenter,
-        rotation,
-        flip,
-        &actor->color,
-        (int)actor->frame);
+	gf2d_sprite_draw(
+		    actor->sprite,
+		    drawPosition,
+		    &drawScale,
+		    scaleCenter,
+		    rotation,
+		    flip,
+		    &actor->color,
+		    (int)actor->frame);
 
 }
 

@@ -1,3 +1,6 @@
+#ifndef __SMART_QUEUE_H__
+#define __SMART_QUEUE_H__
+
 #include "gfc_vector.h"
 #include "queue.h"
 typedef struct VectorSpecial VectorSpecial;
@@ -50,3 +53,4 @@ VectorSpecial* smart_front(SmartQueue* q);
 VectorSpecial* smart_rear(SmartQueue* q);
 
 void smart_killqueue(SmartQueue *q);
+#endif

@@ -6,8 +6,8 @@
 typedef struct
 {
     TextLine filename;      //map file
-    Uint32	 *path;
-    Uint32   pathmap_length;  // how many tiles we have
+    int	 *path;
+    Uint32   pathmap_length;
     Uint32   pathmap_width;  // how many tiles across we have
 }Path_Map;
 

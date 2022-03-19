@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <stdio.h>
 #include "entity.h"
 #include "simple_logger.h"
 void check_inputs()
@@ -36,9 +37,8 @@ void check_inputs()
 							path_free(ent->path);
 							ent->path = NULL;
 						}
-						//slog("%d",ent->health);
 						Path *pat = path_new();
-						path_find(pat,mx,my,ent->position.x,ent->position.y,30);
+						path_find(pat,mx,my,ent->position.x,ent->position.y);
 						ent->path = pat;
 						}
 					}
@@ -118,6 +118,15 @@ void check_inputs()
 									}
 								}
 						break;
+					case SDLK_h:
+						for(int i =0; i<gfc_list_get_count(ents);i++)
+								{
+									ent = gfc_list_get_nth(ents,i);
+									if(ent->build==1)
+									{
+										ent->build = 7;
+									}
+								}
 						
 				}
 		    }

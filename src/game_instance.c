@@ -72,17 +72,45 @@ game_instance *game_new(int isPlayer)
             //GOT ONE!
             game_manager.players[i]._inuse = 1;
             game_manager.players[i].team = isPlayer ? 0 : t_curr;
-            game_manager.players[i].resources = 0;
+            game_manager.players[i].resources = 100;
+           	game_manager.players[i].units=gfc_allocate_array(sizeof(Entity),64);
+           	game_manager.players[i].buildings=gfc_allocate_array(sizeof(Entity),16);
             if(isPlayer)
-                tmp = building_ent_new(vector2d(100,50));
+                tmp = building_ent_new(vector2d(100,100));
             else
-                tmp = building_ent_new(vector2d(1000,550));
+                tmp = building_ent_new(vector2d(900,500));
             tmp->team = isPlayer ? 0 : t_curr++;
+            tmp->inflict = isPlayer ? 0 : 1;
+            building_append(&game_manager.players[i],tmp);
             return &game_manager.players[i];
         }
     }
     slog("out of entities");
     return NULL;
+}
+void unit_append(game_instance *g, Entity *unit)
+{
+	List *local = g->units;
+	local = gfc_list_append(local,unit);
+	g->units = local;
+	
+}
+void unit_remove(game_instance *g,Entity *unit)
+{
+	List *local = g->units;
+	gfc_list_delete_data(local,unit);
+}
+void building_append(game_instance *g,Entity *building)
+{
+	List *local = g->buildings;
+	local = gfc_list_append(local,building);
+	g->buildings = local;
+}
+
+void building_remove(game_instance *g,Entity *building)
+{
+	List *local = g->buildings;
+	gfc_list_delete_data(local,building);
 }
 
 void game_free(game_instance *g)
@@ -92,6 +120,8 @@ void game_free(game_instance *g)
         slog("null pointer provided, nothing to do!");
         return;
     }
+    gfc_list_delete(g->units);
+    gfc_list_delete(g->buildings);
     memset(g,0,sizeof(game_instance));
 }
 

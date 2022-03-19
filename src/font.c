@@ -174,3 +174,37 @@ void font_render(Font *font,char *text,Vector2D position,Color color)
     SDL_DestroyTexture(texture);
 }
 
+Font *font_get_by_tag(FontTypes tag)
+{
+    if ((tag < 0) ||(tag >= FT_MAX))
+    {
+        slog("bad font tag: %i",tag);
+        return NULL;
+    }
+    return &font_manager.fontList[0];
+}
+
+Vector2D font_get_bounds(char *text,Font *font)
+{
+    int x = -1,y = -1;
+    if (!text)
+    {
+        slog("cannot size text, none provided");
+        return vector2d(-1,-1);
+    }
+    if (!font)
+    {
+        slog("cannot size text, no font provided");
+        return vector2d(-1,-1);
+    }
+    
+    TTF_SizeUTF8(font->font, text, &x,&y);
+    return vector2d(x,y);
+}
+
+
+Vector2D text_get_bounds(char *text,FontTypes tag)
+{
+	return font_get_bounds(text,font_get_by_tag(tag));
+}
+

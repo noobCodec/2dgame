@@ -1,3 +1,5 @@
+#ifndef __GOBLIN_H__
+#define __GOBLIN_H__
 #include "entity.h"
 
 /**
@@ -6,3 +8,4 @@
  * @returns NULL on error, or a pointer to the bug
  */
 Entity *goblin_ent_new(Vector2D position, int fire_range);
+#endif

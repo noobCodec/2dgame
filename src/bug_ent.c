@@ -27,7 +27,14 @@ void bug_think(Entity *self)
 	if(self->path && gfc_list_get_count(self->path->path))
 	{
 	//slog("p]");
-	Vector2D out = travel_location(self->path,self->position.x,self->position.y,30);
+	Vector2D out = travel_location(self->path,self->position.x,self->position.y);
+	slog("%d",self->effects);
+	if(self->effects & 2)
+	{
+	slog("sp[eed]");
+	out.x *=4;
+	out.y *=4;
+	}
 	vector2d_copy(self->velocity,out);
 	}
 	else if(self->path)
