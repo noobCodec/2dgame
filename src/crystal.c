@@ -4,7 +4,7 @@
 #include <SDL.h>
 void crystal_think(Entity *self)
 {
-	gf2d_draw_rect(shape_rect_to_sdl_rect(self->bounding),vector4d(0,255,0,255));
+	//gf2d_draw_rect(shape_rect_to_sdl_rect(self->bounding),vector4d(0,255,0,255));
 	if(self->health <= 0 )
 	{
 		entity_free(self);

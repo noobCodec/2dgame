@@ -20,4 +20,4 @@ Keybinds Necessary to play
 
 Goal is to kill Enemy HQ to win
 
-Use <F2> to quit or restart and <F3> to close the menu
+Use <F1> to quit or restart and <F2> to close the menu

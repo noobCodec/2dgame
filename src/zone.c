@@ -18,7 +18,7 @@ Uint32 zone_reset(Uint32 t, void *data)
 }
 void zone_think(Entity *self)
 {
-	gf2d_draw_rect(shape_rect_to_sdl_rect(self->bounding),vector4d(0,255,0,255));
+	//gf2d_draw_rect(shape_rect_to_sdl_rect(self->bounding),vector4d(0,255,0,255));
 	
 	List *located = touch(self);
 	if(!located) return;

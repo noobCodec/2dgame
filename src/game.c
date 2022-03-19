@@ -27,14 +27,26 @@
 #include "simple_json.h"
 #include "elements.h"
 static int enabled = 1;
-void showStuff(Element *e, Element *e2)
+
+
+void resetStuff(game_instance *player, game_instance *opp,TileMap *t)
+{
+	game_manager_clear();
+	entity_manager_clear();
+	opp = game_new(0);
+	player = game_new(1);
+	crystal_ent_new(vector2d(350,200),25);
+    crystal_ent_new(vector2d(600,500),25);
+    load_obstacles(t);
+}
+void showStuff(Element *e, Element *e2,game_instance *player, game_instance *opp,TileMap *t)
 {
 	element_draw(e,vector2d(500,650));
     element_draw(e2,vector2d(650,650));
     List* restart = element_update(e,vector2d(500,650));
     if(gfc_list_get_count(restart))
     {
-    	exit(4);
+    	resetStuff(player,opp,t);
     }
     restart = element_update(e2,vector2d(650,650));
     if(gfc_list_get_count(restart))
@@ -43,15 +55,11 @@ void showStuff(Element *e, Element *e2)
     }
 }
 
-
 int main(int argc, char * argv[])
 {
 init_logger("gf2d.log");
     int done = 0;
     const Uint8 * keys;
-    //Sprite *sprite;
-    //Sprite *mouse;
-    //Vector4D mouseColor = {255,100,255,200};
     TileMap *tilemap;
     
     init_logger("gf2d.log");
@@ -71,7 +79,6 @@ init_logger("gf2d.log");
     path_manager_init(12);
     gem_action_list_init(128);
     SDL_ShowCursor(SDL_DISABLE);
-    //mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
     mouse_load("level/mouse.json");
     crystal_ent_new(vector2d(350,200),25);
     crystal_ent_new(vector2d(600,500),25);
@@ -95,15 +102,12 @@ init_logger("gf2d.log");
 	{
 		e2 = element_load_from_config(json);
 	}
-	//new_damage_zone(vector2d(40,40),5);
 	Font *char_font = font_load("images/text.ttf",12);
 	Font *game_font = font_load("images/text.ttf",64);
 	game_manager_init(12);
-	//Path_Map_debug(path);
 	game_instance *opp = game_new(0);
 	game_instance *player = game_new(1);
 	opponent_init(opp,player);
-	//other_building_ent_new(vector2d(650,650));
     while(!done)
     {
         SDL_PumpEvents();
@@ -129,22 +133,13 @@ init_logger("gf2d.log");
         }
         font_render(char_font,out2,vector2d(200,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
         font_render(char_font,out,vector2d(400,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
-     	/*gf2d_sprite_draw(
-                mouse,
-                vector2d(mx,my),
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                &mouseColor,
-                (int)mf);
-        */
         if(enabled==-1)
         {
-        	showStuff(e,e2);
+        	showStuff(e,e2,opp,player,tilemap);
         }
-        if (keys[SDL_SCANCODE_F1])enabled =-1;
-        if (keys[SDL_SCANCODE_F2])enabled =1;
+        if (keys[SDL_SCANCODE_F1])enabled = -1;
+        if (keys[SDL_SCANCODE_F2])enabled = 1;
+        if(keys[SDL_SCANCODE_F3])resetStuff(opp,player,tilemap);
         opponent_think();
         mouse_draw();
         gf2d_grahics_next_frame();
