@@ -19,7 +19,6 @@ static PathManager path_manager = {0};
 
 static path_set tmp = {0};
 
-static path_set dumpy = {0};
 
 int get_rows()
 {
@@ -37,9 +36,6 @@ void set_path(int *arr,Uint32 rows,Uint32 cols)
 	tmp.cols = cols;
 	tmp.path_map = malloc(sizeof(int) * rows * cols);
 	memcpy(tmp.path_map,arr,sizeof(int)*rows*cols);
-	dumpy.rows = rows;
-	dumpy.cols = cols;
-	dumpy.path_map = malloc(sizeof(int) * rows * cols);
 	
 /*	for(int i = 0 ; i < rows*cols;i++)*/
 /*	{*/
@@ -64,7 +60,6 @@ void path_manager_close()
 {
 	path_manager_clear();
 	free(tmp.path_map);
-	free(dumpy.path_map);
 	free(path_manager.path_list);
 }
 void path_manager_clear()
@@ -110,11 +105,10 @@ Path *path_new()
 void path_find(Path* path,int srcx,int srcy,int dstx,int dsty)
 {
 	//slog("%d:%d,%d:%d",srcx/60,srcy/60,dstx/60,dsty/60);
-	memset(dumpy.path_map,0,dumpy.rows*dumpy.cols*sizeof(int));
-	int scale = 1200 / dumpy.cols;
+	int scale = 1200 / tmp.cols;
     if(path)
     {
-		path->path = BFS(tmp.path_map,dumpy.path_map,srcx/scale,srcy/scale,dstx/scale,dsty/scale,dumpy.rows,dumpy.cols);
+		path->path = BFS(tmp.path_map,srcx/scale,srcy/scale,dstx/scale,dsty/scale,tmp.rows,tmp.cols);
 		if(path->path)
 		{
 /*		for(int i = 0;i<gfc_list_get_count(path->path);i++)*/
@@ -130,7 +124,7 @@ void path_find(Path* path,int srcx,int srcy,int dstx,int dsty)
 }
 Vector2D travel_location(Path* path,float x, float y)
 {
-	int scale = 1200 / dumpy.cols;
+	int scale = 1200 / tmp.cols;
 	//slog("%d",scale);
 	int realx = x / scale;
 	int realy = y / scale;

@@ -57,6 +57,16 @@ void showStuff(Element *e, Element *e2,game_instance *player, game_instance *opp
 
 int main(int argc, char * argv[])
 {
+/*	int grid[2073600] = {0};*/
+/*	for(int i = 0; i < 2073600;i++) grid[i] = 1;*/
+/*	List *res = BFS(grid,20,20,1900,1000,1080,1920);*/
+/*	for(int i =0; i<gfc_list_get_count(res);i++)*/
+/*			{*/
+/*				Point *tmp = gfc_list_get_nth(res,i);*/
+/*				slog("%d:%d",tmp->x,tmp->y);*/
+/*				free(tmp);*/
+/*			}*/
+/*	gfc_list_delete(res);*/
 init_logger("gf2d.log");
     int done = 0;
     const Uint8 * keys;
