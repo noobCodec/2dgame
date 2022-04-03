@@ -30,6 +30,7 @@ void check_inputs()
         		for(int i =0; i<gfc_list_get_count(ents);i++)
 					{
 						ent = gfc_list_get_nth(ents,i);
+                        slog("pathing");
 						if(ent->damage)
 						{
 						if(ent->path)

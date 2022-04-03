@@ -28,6 +28,7 @@ void zone_think(Entity *self)
 			node->effects |= 1 << self->type; 
     		self->blocked = 1;
 		}
+    gfc_list_delete(located);
 	return;
 }
 

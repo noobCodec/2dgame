@@ -1,0 +1,10 @@
+{
+                "type": "label",
+                "name": "Welcome",
+                "id" : 12,
+                "bounds": [0,450,900,32],
+                "color" : [0,0,255,255],
+                "text":"Monkey",
+                "justify" : "right",
+                "style":"H3"
+}

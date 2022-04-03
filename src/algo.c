@@ -82,6 +82,7 @@ costPoint *init_cost_point(int x, int y, int cost)
 Point *init_point(int x,int y)
 {
 	Point *new = malloc(sizeof(Point));
+//     slog("%ld",sizeof(Point));
 	new->x = x;
 	new->y = y;
 	new->prev = NULL;
@@ -119,7 +120,6 @@ int isValid(int *visited,int row,int col,int col_size,int row_size)
 List* backtrack(costPoint *x)
 {
 	List *q = gfc_list_new();
-	
 	while(x->prev)
 	{
 		q = gfc_list_append(q,init_point(x->x,x->y));
@@ -137,6 +137,7 @@ int heuristic(int row, int col, int goal_row,int goal_col)
 }
 List* BFS(int *grid,int row,int col,int goal_row, int goal_col,int col_size,int row_size)
 {
+//     slog("looking");
 	if(grid[row*col_size+col]==-1 || grid[goal_row*col_size+goal_col]==-1) return NULL;
 	int *visited = malloc(sizeof(int)*col_size*row_size);
 	memset(visited,0,sizeof(int)*col_size*row_size);
@@ -157,7 +158,7 @@ List* BFS(int *grid,int row,int col,int goal_row, int goal_col,int col_size,int 
 		int y = cell->y;
 		if(x == goal_row && y == goal_col)
 		{
-		//debug(visited,40,40);
+/*		debug(visited,col_size,row_size);*/
 			List *done = backtrack(cell);
 			while(!isEmpty(&pq)) pop(&pq);
 			for(int i =0; i<gfc_list_get_count(tobefreed);i++)
@@ -174,7 +175,7 @@ List* BFS(int *grid,int row,int col,int goal_row, int goal_col,int col_size,int 
 			int xcoord = x + adjx[i];
 			int ycoord = y + adjy[i];
 			int new_cost = cell->cost + grid[xcoord*col_size+ycoord];
-			if(isValid(visited,xcoord,ycoord,col_size,length) && (grid[xcoord*col_size+ycoord]!=-1) && (visited[xcoord*col_size+ycoord]==0 || new_cost < visited[xcoord*col_size+ycoord] ))
+			if(isValid(visited,xcoord,ycoord,col_size,length) && (grid[xcoord*col_size+ycoord]!=-1) && ((visited[xcoord*col_size+ycoord]==0) || new_cost < visited[xcoord*col_size+ycoord]))
 			{
 				ptr = init_cost_point(xcoord,ycoord,new_cost);
 				tobefreed=gfc_list_append(tobefreed,ptr);

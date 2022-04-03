@@ -67,6 +67,7 @@ void path_manager_clear()
 	int i;
 	for(i = 0; i < path_manager.max_paths;i++)
 	{
+        if(path_manager.path_list[i]._inuse)
 		path_free(&path_manager.path_list[i]);
 	}
 }
@@ -109,16 +110,6 @@ void path_find(Path* path,int srcx,int srcy,int dstx,int dsty)
     if(path)
     {
 		path->path = BFS(tmp.path_map,srcx/scale,srcy/scale,dstx/scale,dsty/scale,tmp.rows,tmp.cols);
-		if(path->path)
-		{
-/*		for(int i = 0;i<gfc_list_get_count(path->path);i++)*/
-/*		{*/
-/*			Point *x = gfc_list_get_nth(path->path,i);*/
-/*			slog("%d:%d",x->x,x->y);*/
-/*		}*/
-		}
-/*		if(path->path==NULL)*/
-/*			slog("stuck");*/
     }
     return;
 }
@@ -145,6 +136,7 @@ Vector2D travel_location(Path* path,float x, float y)
     if(gfc_list_get_count(next) && local->x==realx && local->y==realy)
     {
 		gfc_list_delete_nth(next,0);
+        free(local);
 		local = gfc_list_get_nth(next,0);
     }
     if(!gfc_list_get_count(next)) 
@@ -161,16 +153,11 @@ Vector2D travel_location(Path* path,float x, float y)
     	vector2d_set_magnitude(&res,1);
     	return res;
     }
-    //slog("pathing");
-/*    slog("x:%f,y:%f",local->x,local->y);*/
-/*    slog("LOCALx:%f,y:%f",realx,realy);*/
     calcx = local->x * scale + scale * 0.5;
     calcy = local->y * scale + scale * 0.5;
     realx = realx * scale + scale * 0.5;
     realy = realy * scale + scale * 0.5;
-/*    slog("x:%f,y:%f",calcx,calcy);*/
     Vector2D res = vector2d(calcx-realx,calcy-realy);
-/*    slog("RESx:%f,y:%f",res.x,res.y);*/
     vector2d_set_magnitude(&res,1);
     return res;
 }

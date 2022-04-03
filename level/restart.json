@@ -11,9 +11,12 @@
         "type": "label",
         "name": "restart",
         "id" : 521,
-        "bounds": [20,10,168,64],
+        "bounds": [0,0,105,45],
         "color" : [255,255,255,255],
-        "text":"restart"
+        "text":"restart",
+        "align": "middle",
+        "justify" : "center",
+        "style":"H2"
         },
     "actor" :
         {

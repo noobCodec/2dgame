@@ -40,4 +40,7 @@ void font_render(Font *font,char *text,Vector2D position,Color color);
 Font *font_get_by_tag(FontTypes tag);
 Vector2D text_get_bounds(char *text,FontTypes tag);
 Vector2D font_get_bounds(char *text,Font *font);
+void populate_fonts(char *file);
+void text_draw_line(char *text,FontTypes tag, Color color, Vector2D position);
+void font_manager_clear();
 #endif

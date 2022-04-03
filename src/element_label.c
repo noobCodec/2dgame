@@ -8,12 +8,11 @@ void element_label_draw(Element *element,Vector2D offset)
 {
     LabelElement *label;
     Vector2D position;
-    Font *char_font = font_load("images/text.ttf",16);
     Vector2D size = {0};
     if (!element)return;
     label = (LabelElement*)element->data;
     if (!label)return;
-    size = font_get_bounds(label->text,char_font);
+    size = font_get_bounds(label->text,font_get_by_tag(label->style));
     if (size.x < 0)
     {
         return;
@@ -43,7 +42,7 @@ void element_label_draw(Element *element,Vector2D offset)
             break;
     }
     //slog("%f:%f",position.x,position.y);
-    font_render(char_font,label->text,position,element->color);
+    text_draw_line(label->text,label->style,element->color,position);
 }
 
 List *element_label_update(Element *element,Vector2D offset)

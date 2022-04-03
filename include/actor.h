@@ -138,7 +138,7 @@ void gem_actor_draw(
     Vector3D * rotation,
     Vector2D * flip
 );
-
+void gem_action_list_clear_all();
 /**
  * @brief set the action and starting frame for an actor
  * @param actor the actor to set

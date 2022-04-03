@@ -1,10 +1,12 @@
 #include "simple_logger.h"
 #include "gf2d_graphics.h"
 #include "font.h"
+#include "simple_json.h"
 
 typedef struct
 {
     Font *fontList;
+    Font *font_tags[FT_MAX];
     Uint32 maxFonts;
 }FontManager;
 
@@ -30,7 +32,17 @@ void font_manager_close()
     free(font_manager.fontList);
     memset(&font_manager,0,sizeof(FontManager));
 }
-
+void font_manager_clear()
+{
+	int i;
+    if (font_manager.fontList != NULL)
+    {
+        for (i = 0 ; i < font_manager.maxFonts; i++)
+        {
+            font_delete(&font_manager.fontList[i]);
+        }
+    }
+}
 void font_init(Uint32 maxFonts)
 {
     if (!maxFonts)
@@ -43,7 +55,6 @@ void font_init(Uint32 maxFonts)
         slog("TTF_Init: %s\n", TTF_GetError());
         return;
     }
-    font_manager_close();
     font_manager.maxFonts = maxFonts;
     font_manager.fontList = (Font *)gfc_allocate_array(sizeof(Font),maxFonts);
     atexit(font_manager_close);
@@ -104,6 +115,34 @@ Font *font_load(const char *filename, int ptsize)
         slog("failed to open font %s!, re: %s",filename,TTF_GetError());
         font_delete(font);
         return NULL;
+    }
+    
+    switch(ptsize)
+    {
+    	case 14:
+    		font_manager.font_tags[FT_Normal] = font;
+    		break;
+    	case 10:
+    		font_manager.font_tags[FT_Small] = font;
+    		break;
+    	case 28:
+    		font_manager.font_tags[FT_H1] = font;
+    		break;
+    	case 24:
+    		font_manager.font_tags[FT_H2] = font;
+    		break;
+    	case 22:
+    		font_manager.font_tags[FT_H3] = font;
+    		break;
+    	case 20:
+    		font_manager.font_tags[FT_H4] = font;
+    		break;
+    	case 16:
+    		font_manager.font_tags[FT_H5] = font;
+    		break;
+    	case 15:
+    		font_manager.font_tags[FT_H6] = font;
+    		break;
     }
     return font;
 }
@@ -181,7 +220,7 @@ Font *font_get_by_tag(FontTypes tag)
         slog("bad font tag: %i",tag);
         return NULL;
     }
-    return &font_manager.fontList[0];
+    return &font_manager.fontList[tag];
 }
 
 Vector2D font_get_bounds(char *text,Font *font)
@@ -206,5 +245,34 @@ Vector2D font_get_bounds(char *text,Font *font)
 Vector2D text_get_bounds(char *text,FontTypes tag)
 {
 	return font_get_bounds(text,font_get_by_tag(tag));
+}
+
+void text_draw_line(char *text,FontTypes tag, Color color, Vector2D position)
+{
+	font_render(font_get_by_tag(tag),text,position,color);
+}
+void populate_fonts(char *file)
+{
+	SJson *json = NULL;
+	SJson *arr = NULL;
+	SJson *element = NULL;
+	int e;
+	const char *fontFile = NULL;
+	json = sj_load("level/font.json");
+	if(!json)
+	{
+		slog("no json loaded in populate_fonts");
+		return;
+	}
+	fontFile = sj_get_string_value(sj_object_get_value(json,"file"));
+	arr = sj_object_get_value(json,"sizes");
+	
+	for(int i = 0; i < sj_array_get_count(arr);i++)
+	{
+		element = sj_array_get_nth(arr,i);
+		sj_get_integer_value(element, &e);
+		font_load(fontFile,e);
+	}
+	sj_free(json);
 }
 

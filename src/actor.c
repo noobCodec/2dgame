@@ -26,6 +26,7 @@ void gem_action_list_clear_all()
     int i;
     for (i = 0;i < action_list_manager.maxActionLists;i++)
     {
+        if (action_list_manager.actionLists[i].ref_count)
         gem_action_list_delete(&action_list_manager.actionLists[i]);// clean up the data
     }
 }
@@ -315,6 +316,7 @@ void gem_actor_free(Actor *actor)
     if (!actor)return;
     gf2d_sprite_free(actor->sprite);
     gem_action_list_free(actor->al);
+    //free(actor);
     memset(actor,0,sizeof(Actor));
 }
 
