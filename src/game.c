@@ -5,6 +5,7 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 #include <stdio.h>
+#include "game_instance.h"
 #include "entity.h"
 #include "bug_ent.h"
 #include "tile_map.h"
@@ -19,7 +20,6 @@
 #include "crystal.h"
 #include "actor.h"
 #include "warrior.h"
-#include "game_instance.h"
 #include "mouse.h"
 #include "opponent.h"
 #include "zone.h"
@@ -30,8 +30,8 @@
 #include "game_ops.h"
 #include "gfc_audio.h"
 static int enabled = 0;
-
-
+static int done = 0;
+static int dirty = 0;
 
 void restart_game()
 {
@@ -58,11 +58,12 @@ int main_menu_update(Window *win,List *updateList)
         switch(e->index)
         {
             case 63:
-            	exit(0);
+            	done = 1;
                 slog("ok");
                 break;
             case 52:
                 slog("cancel");
+                save_game();
                 break;
             case 61:
             	enabled = 0;
@@ -70,6 +71,11 @@ int main_menu_update(Window *win,List *updateList)
             case 60:
             	restart_game();
             	break;
+            case 62:
+                game_manager_clear();
+                entity_manager_clear();
+                dirty = 1;
+                load_game("saves/save.json");
             	
         }
     }
@@ -89,7 +95,6 @@ void main_menu()
     sj_free(json);
 }
 
-
 int main(int argc, char * argv[])
 {
     gfc_audio_init(32,2,2,1,1,0);
@@ -97,9 +102,7 @@ int main(int argc, char * argv[])
     //slog("Mix_LoadMUS: %s\n", Mix_GetError());
 
     gfc_sound_play(s,100,50,1,1);
-    save_game();
-init_logger("gf2d.log");
-    int done = 0;
+    init_logger("gf2d.log");
     const Uint8 * keys;
     TileMap *tilemap;
 
@@ -116,13 +119,11 @@ init_logger("gf2d.log");
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
     tile_set_manager_init(16);
-    entity_manager_init(20);
+    entity_manager_init(2000);
     path_manager_init(200);
     gem_action_list_init(128);
     SDL_ShowCursor(SDL_DISABLE);
     mouse_load("level/mouse.json");
-    crystal_ent_new(vector2d(350,200),25);
-    crystal_ent_new(vector2d(600,500),25);
     tilemap = tilemap_load("level/test.json");
 	Path_Map *path = Path_Map_load("level/xd.json");
 	set_path(path->path,path->pathmap_width,path->pathmap_length);
@@ -133,18 +134,21 @@ init_logger("gf2d.log");
 	load_obstacles(tilemap);
 	char *out = malloc(14 * sizeof(char));
 	char *out2 = malloc(14 * sizeof(char));
-    Entity *t = warrior_ent_new(vector2d(50,50),30);
-    entity_free(t);
-    warrior_ent_new(vector2d(50,50),30);
-    warrior_ent_new(vector2d(50,50),30);
-    warrior_ent_new(vector2d(50,50),30);
+    crystal_ent_new(vector2d(450,90));
  	game_manager_init(12);
 	game_instance *opp = game_new(0);
 	game_instance *player = game_new(1);
 	opponent_init(opp,player);
+    //load_game("saves/save.json");
 	main_menu();
     while(!done)
     {
+        if(dirty)
+        {
+         opp = get_game(1);
+         player = get_game(0);
+         dirty = 0;
+        }
         SDL_PumpEvents();
         	keys = SDL_GetKeyboardState(NULL);
         	mouse_update();

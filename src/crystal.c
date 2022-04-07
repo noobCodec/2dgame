@@ -18,7 +18,7 @@ void crystal_think(Entity *self)
 	}
 	self->old_health = self->health;
 }
-Entity *crystal_ent_new(Vector2D position,int fire_range)
+Entity *crystal_ent_new(Vector2D position)
 {
     Entity *ent;
     ent = entity_new();

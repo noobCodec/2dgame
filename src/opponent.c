@@ -44,6 +44,7 @@ void opponent_think()
 	//slog("state:%d",ent->inflict);
 	if(!ent->inflict)
 	{
+        slog("defend");
 		ent->inflict = 1;
 		time_past = SDL_GetTicks();
 		state = DEFEND;

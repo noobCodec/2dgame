@@ -46,6 +46,7 @@ void building_think(Entity *self)
     int resources = game->resources;
 	if(self->build == 2 && resources >= 50)
 	{
+        slog("making");
 		game->resources -= 50;
 		tmp = mage_ent_new(vector2d(self->position.x+self->draw_offset.x+60,self->position.y+self->draw_offset.y+140),60);
 		self->build = 1;

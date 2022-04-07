@@ -8,7 +8,6 @@ typedef struct
     game_instance *players;           /**<a big ole list of entities*/
 }Game_Manager;
 
-static int t_curr = 1;
 static Game_Manager game_manager = {0};
 
 
@@ -45,8 +44,9 @@ void game_manager_clear()
     int i;
     for (i = 0;i < game_manager.max_games;i++)
     {
-        if (!&game_manager.players[i])continue;
+        if (!game_manager.players[i]._inuse)continue;
         game_free(&game_manager.players[i]);
+        memset(&game_manager.players[i],0,sizeof(game_instance));
     }
 }
 game_instance *get_game(int team)
@@ -71,7 +71,7 @@ game_instance *game_new(int isPlayer)
         {
             //GOT ONE!
             game_manager.players[i]._inuse = 1;
-            game_manager.players[i].team = isPlayer ? 0 : t_curr;
+            game_manager.players[i].team = isPlayer ? 0 : 1;
             game_manager.players[i].resources = 100;
            	game_manager.players[i].units=gfc_allocate_array(sizeof(Entity),64);
            	game_manager.players[i].buildings=gfc_allocate_array(sizeof(Entity),16);
@@ -79,7 +79,7 @@ game_instance *game_new(int isPlayer)
                 tmp = building_ent_new(vector2d(100,100));
             else
                 tmp = building_ent_new(vector2d(900,500));
-            tmp->team = isPlayer ? 0 : t_curr++;
+            tmp->team = isPlayer ? 0 : 1;
             tmp->inflict = isPlayer ? 0 : 1;
             building_append(&game_manager.players[i],tmp);
             return &game_manager.players[i];
@@ -87,6 +87,39 @@ game_instance *game_new(int isPlayer)
     }
     slog("out of entities");
     return NULL;
+}
+game_instance *game_new_no_default(int isPlayer)
+{
+    int i;
+    for (i = 0;i < game_manager.max_games;i++)
+    {
+        if (!game_manager.players[i]._inuse)
+        {
+            //GOT ONE!
+            game_manager.players[i]._inuse = 1;
+            game_manager.players[i].team = isPlayer ? 0 : 1;
+            game_manager.players[i].resources = 100;
+           	game_manager.players[i].units=gfc_allocate_array(sizeof(Entity),64);
+           	game_manager.players[i].buildings=gfc_allocate_array(sizeof(Entity),16);
+            return &game_manager.players[i];
+        }
+    }
+    slog("out of entities");
+    return NULL;
+}
+void game_iterate()
+{
+    int i;
+    for (i = 0;i < game_manager.max_games;i++)
+    {
+        if (game_manager.players[i]._inuse)
+        {
+            slog("in use at index:%d",i);
+        }
+    }
+    return;
+
+
 }
 void unit_append(game_instance *g, Entity *unit)
 {

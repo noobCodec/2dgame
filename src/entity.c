@@ -145,14 +145,14 @@ void entity_free(Entity *entity)
     	if(ptr && ptr->units)
     		unit_remove(ptr,entity);
     }
-    if(entity->path)
-    {
-        path_free(entity->path);
-    }
+//     if(entity->path)
+//     {
+//         path_free(entity->path);
+//     }
     if(entity->actor)
     {
-//         if(entity->actor->al)
-//         gem_actor_free(entity->actor);
+        if(entity->actor->al)
+        gem_actor_free(entity->actor);
         free(entity->actor);
     }
     memset(entity,0,sizeof(Entity));
