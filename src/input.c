@@ -3,6 +3,7 @@
 #include "entity.h"
 #include "camera.h"
 #include "hud.h"
+#include "mouse.h"
 #include "simple_logger.h"
 
 static List *ents = NULL;
@@ -16,66 +17,120 @@ List* check_inputs()
     int my = 0;
 	SDL_Event event;
 	Entity *ent;
-	SDL_GetMouseState(&mx,&my);
+    Vector2D local_vec = mouse_get_position();
+	mx = local_vec.x;
+    my = local_vec.y;
+    if(mouse_button_pressed(0))
+    {
+
+     init_x = mx;
+     init_y = my;
+     pressed = 1;
+    }
+    if(mouse_button_pressed(2))
+    {
+        slog("pressed");
+        if(ents)
+        {
+            for(int i =0; i<gfc_list_get_count(ents);i++)
+                {
+                    ent = gfc_list_get_nth(ents,i);
+                    if(ent->damage)
+                    {
+                    if(ent->path)
+                    {
+                        path_free(ent->path);
+                        ent->path = NULL;
+                    }
+                    Path *pat = path_new();
+                    path_find(pat,mx,my,ent->position.x,ent->position.y);
+                    ent->path = pat;
+                    }
+                }
+        }
+    }
+    if(mouse_button_released(0) && !external_block)
+    {
+        if(ents)
+        {
+            gfc_list_delete(ents);
+            ents = NULL;
+        }
+        pressed = 0;
+        ents = entity_click(mx,my,init_x,init_y);
+        if(!gfc_list_get_count(ents))
+        {
+            gfc_list_delete(ents);
+            ents = NULL;
+        }
+        update_hud_elements(ents);
+    }
+    else if(mouse_button_released(0))
+    {
+        external_block = 0;
+        pressed = 0;
+        update_hud_elements(ents);
+    }
 	while(SDL_PollEvent(&event))
         {
-        	if(event.type == SDL_MOUSEBUTTONDOWN)
-        	{
-        	
-        		if(event.button.button == SDL_BUTTON_LEFT)
-        		{
-        			SDL_GetMouseState(&init_x,&init_y);
-        			pressed = 1;
-        		}
-        		if(event.button.button == SDL_BUTTON_RIGHT)
-        		{
-        		if(ents)
-        		{
-                slog("ents");
-        		for(int i =0; i<gfc_list_get_count(ents);i++)
-					{
-						ent = gfc_list_get_nth(ents,i);
-						if(ent->damage)
-						{
-						if(ent->path)
-						{
-							path_free(ent->path);
-							ent->path = NULL;
-						}
-						Path *pat = path_new();
-						path_find(pat,mx,my,ent->position.x,ent->position.y);
-						ent->path = pat;
-						}
-					}
-        		}
-        		}
-        	}
-        	if(event.type == SDL_MOUSEBUTTONUP)
-        	{
-        		if(event.button.button == SDL_BUTTON_LEFT && !external_block)
-        		{
-        			if(ents)
-        			{
-        				gfc_list_delete(ents);
-        				ents = NULL;
-        			}
-        			pressed = 0;
-        			ents = entity_click(mx,my,init_x,init_y);
-        			if(!gfc_list_get_count(ents))
-        			{
-        				gfc_list_delete(ents);
-        				ents = NULL;
-        			}
-        		}
-        		else if(event.button.button == SDL_BUTTON_LEFT)
-                {
-                    external_block = 0;
-                    pressed = 0;
-                }
-                slog("%d",gfc_list_get_count(ents));
-                update_hud_elements(ents);
-        	}
-        
+//         	if(event.type == SDL_MOUSEBUTTONDOWN)
+//         	{
+//
+//         		if(event.button.button == SDL_BUTTON_LEFT)
+//         		{
+//         			SDL_GetMouseState(&init_x,&init_y);
+//         			pressed = 1;
+//         		}
+//         		if(event.button.button == SDL_BUTTON_RIGHT)
+//         		{
+//                     if(ents)
+//                     {
+//                         for(int i =0; i<gfc_list_get_count(ents);i++)
+//                             {
+//                                 ent = gfc_list_get_nth(ents,i);
+//                                 if(ent->damage)
+//                                 {
+//                                 if(ent->path)
+//                                 {
+//                                     path_free(ent->path);
+//                                     ent->path = NULL;
+//                                 }
+//                                 Path *pat = path_new();
+//                                 path_find(pat,mx,my,ent->position.x,ent->position.y);
+//                                 ent->path = pat;
+//                                 }
+//                             }
+//                     }
+//         		}
+//         	}
+//         	if(event.type == SDL_MOUSEBUTTONUP)
+//         	{
+//         		if(event.button.button == SDL_BUTTON_LEFT && !external_block)
+//         		{
+// //                     slog("MODIFIED ENTITIES");
+//         			if(ents)
+//         			{
+//         				gfc_list_delete(ents);
+//         				ents = NULL;
+//         			}
+//         			pressed = 0;
+//         			ents = entity_click(mx,my,init_x,init_y);
+//         			if(!gfc_list_get_count(ents))
+//         			{
+//         				gfc_list_delete(ents);
+//         				ents = NULL;
+//         			}
+//         		}
+//         		else if(event.button.button == SDL_BUTTON_LEFT)
+//                 {
+// //                     slog("UNBLOCKED");
+//                     external_block = 0;
+//                     pressed = 0;
+//                 }
+//                 slog("ENTITY COUNT: %d",gfc_list_get_count(ents));
+//                 update_hud_elements(ents);
+//         	}
+
 		    if(event.type == SDL_KEYDOWN)
 		    {
 				switch(event.key.keysym.sym)
@@ -152,13 +207,23 @@ List* check_inputs()
                     case SDLK_k:
                         camera_move(vector2d(0,-60));
                         break;
-						
+
 				}
 		    }
         }
         if(pressed){
         	ShapeRect tmp = shape_rect_from_vector4d(vector4d(MIN(mx,init_x),MIN(my,init_y),MAX(mx,init_x)-MIN(mx,init_x),MAX(my,init_y)-MIN(my,init_y)));
     gf2d_draw_rect(shape_rect_to_sdl_rect(tmp),vector4d(0,255,0,255));
+        }
+        if(ents && gfc_list_get_count(ents))
+        {
+         for(int i = 0; i < gfc_list_get_count(ents);i++)
+         {
+          Entity *local = gfc_list_get_nth(ents,i);
+          if(local->damage)
+          gf2d_draw_rect(shape_rect_to_sdl_rect(local->bounding),vector4d(0,255,0,255));
+         }
+
         }
     return NULL;
 }

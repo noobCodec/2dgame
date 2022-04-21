@@ -11,28 +11,22 @@ void update_hud(Window *win,List *updateList)
     if (!win)return;
     if (!updateList)return;
     count = gfc_list_get_count(updateList);
+
     for (i = 0; i < count; i++)
     {
+//         slog("PRESSED");
         e = gfc_list_get_nth(updateList,i);
-//         if (!e)continue;
-//         if(e->type == ET_BUTTON)
-//         {
-//             here = (ButtonElement *)e;
-//             j = (LabelElement *)here->label;
-//             here->label = NULL;
-//             here->style = ES_HIDDEN;
-//             slog("updated");
-//         }
         List *stuff = get_inputs();
         if(stuff)
         {
             Entity *ent = gfc_list_get_nth(stuff,e->index);
-            slog("%d",ent==NULL);
+            slog("NULL: %d",ent==NULL);
             stuff = gfc_list_new();
             gfc_list_append(stuff,ent);
             set_inputs(stuff);
         }
         block(1);
+//         slog("blocked");
     }
     return;
 }
@@ -62,7 +56,6 @@ SJson *make_vec2d(Vector2D x)
 }
 void update_hud_elements(List *ents)
 {
-    return;
     SJson *json = NULL;
     char s[25];
     int i = 0;
@@ -171,10 +164,6 @@ void update_hud_elements(List *ents)
 
 void open_building(Entity *bding)
 {
-
-
-
-
 }
 void init_hud(const char *file)
 {

@@ -57,6 +57,7 @@ int main_menu_update(Window *win,List *updateList)
     count = gfc_list_get_count(updateList);
     for (i = 0; i < count; i++)
     {
+        slog("UPDATE");
         e = gfc_list_get_nth(updateList,i);
 //         if (!e)continue;
 //         if(e->type == ET_BUTTON)
@@ -107,14 +108,9 @@ Window* main_menu()
     return win;
 }
 
-
-
-
-
-
-
 int main(int argc, char * argv[])
 {
+    int lop = 0;
 //     update_hud_elements(NULL);
     List *lst;
     gfc_audio_init(32,2,2,1,1,0);
@@ -136,7 +132,7 @@ int main(int argc, char * argv[])
         720,
         vector4d(0,0,0,255),
         0);
-    gf2d_graphics_set_frame_delay(16);
+    gf2d_graphics_set_frame_delay(16); // 60 fps = 16 ms delay
     gf2d_sprite_init(1024);
     tile_set_manager_init(16);
     entity_manager_init(2000);
@@ -161,11 +157,12 @@ int main(int argc, char * argv[])
 	game_instance *player = game_new(1);
     camera_set_dimensions(vector2d(1200,720));
     camera_set_position(vector2d(0,0));
-    //init_hud("level/hudcp.json");
+    init_hud("level/hudcp.json");
 	opponent_init(opp,player);
 	Window *win = main_menu();
     while(!done)
     {
+//         slog("START LOOP: %d",lop);
         if(dirty)
         {
          opp = get_game(1);
@@ -173,21 +170,22 @@ int main(int argc, char * argv[])
          dirty = 0;
         }
         SDL_PumpEvents();
-        	keys = SDL_GetKeyboardState(NULL);
-        	mouse_update();
-
+        gf2d_graphics_clear_screen();
+        keys = SDL_GetKeyboardState(NULL);
+        mouse_update();
         windows_update_all();
 
 //         sprintf(out,"%s%d","Resources: ",player->resources);
 //         sprintf(out2,"%s%d","Opponent Resources: ",opp->resources);
-        gf2d_graphics_clear_screen();
+
 
 
         tilemap_draw(tilemap);
         entity_manager_think_all();
         entity_manager_draw_all();
-        windows_draw_all();
         check_inputs();
+        windows_draw_all();
+
         if(game_state() == 3 )
         {
         	font_render(font_get_by_tag(FT_H1),"YOU WON",vector2d(600,300),gfc_color_from_vector4(vector4d(0,255,0,255)));
@@ -200,6 +198,7 @@ int main(int argc, char * argv[])
         font_render(font_get_by_tag(FT_Small),out,vector2d(400,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
 //         opponent_think();
         mouse_draw();
+//         slog("END LOOP: %d",lop++);
         gf2d_grahics_next_frame();
         if (keys[SDL_SCANCODE_ESCAPE])win->active = 1;
     }

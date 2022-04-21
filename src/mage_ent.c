@@ -64,7 +64,7 @@ void mage_think(Entity *self)
     if(!gem_actor_get_frames_remaining(self->actor)){gem_actor_set_action(self->actor,"idle");}
 	self->bounding = shape_rect_from_vector4d(vector4d(self->position.x-8,self->position.y-8,32,32));
 	self->range = shape_circle(self->position.x+16,self->position.y+16,self->range.r);
-	//gf2d_draw_circle(vector2d(self->range.x,self->range.y),self->range.r,vector4d(0,255,0,255));
+// 	gf2d_draw_circle(vector2d(self->range.x,self->range.y),self->range.r,vector4d(0,255,0,255));
 	//gf2d_draw_rect(shape_rect_to_sdl_rect(self->bounding),vector4d(0,255,0,255));
 	//actor->al->drawOffset
 	if(!self) return;
