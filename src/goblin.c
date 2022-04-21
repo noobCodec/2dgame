@@ -141,6 +141,7 @@ Entity *goblin_ent_new(Vector2D position,int fire_range)
     ent->flip.x = 0;
     ent->flip.y = 0;
     ent->health = 50;
+    ent->id = 4;
     ent->max_health=50;
     ent->path = NULL;
     ent->draw = goblin_draw;

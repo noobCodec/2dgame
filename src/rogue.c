@@ -156,6 +156,7 @@ Entity *rogue_ent_new(Vector2D position,int fire_range)
     ent->health = 200;
     ent->max_health=200;
     ent->path = NULL;
+    ent->id = 2;
     ent->draw = rogue_draw;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,32,32));
     ent->enemy = NULL;

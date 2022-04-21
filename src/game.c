@@ -20,6 +20,7 @@
 #include "crystal.h"
 #include "actor.h"
 #include "warrior.h"
+#include "triggerableTile.h"
 #include "mouse.h"
 #include "opponent.h"
 #include "zone.h"
@@ -29,6 +30,8 @@
 #include "windows.h"
 #include "game_ops.h"
 #include "gfc_audio.h"
+#include "element_button.h"
+#include "hud.h"
 static int enabled = 0;
 static int done = 0;
 static int dirty = 0;
@@ -47,14 +50,23 @@ int main_menu_update(Window *win,List *updateList)
 {
     int i,count;
     Element *e;
+    ButtonElement *here;
+    LabelElement *j;
     if (!win)return 0;
     if (!updateList)return 0;
     count = gfc_list_get_count(updateList);
     for (i = 0; i < count; i++)
     {
         e = gfc_list_get_nth(updateList,i);
-        if (!e)continue;
-        slog("updated element index %i",e->index);
+//         if (!e)continue;
+//         if(e->type == ET_BUTTON)
+//         {
+//             here = (ButtonElement *)e;
+//             j = (LabelElement *)here->label;
+//             here->label = NULL;
+//             here->style = ES_HIDDEN;
+//             slog("updated");
+//         }
         switch(e->index)
         {
             case 63:
@@ -66,7 +78,7 @@ int main_menu_update(Window *win,List *updateList)
                 save_game();
                 break;
             case 61:
-            	enabled = 0;
+            	win->active = 0;
             	break;
             case 60:
             	restart_game();
@@ -76,13 +88,12 @@ int main_menu_update(Window *win,List *updateList)
                 entity_manager_clear();
                 dirty = 1;
                 load_game("saves/save.json");
-            	
+
         }
     }
     return 0;
 }
-
-void main_menu()
+Window* main_menu()
 {
     Window *win;
     SJson *json = NULL;
@@ -93,15 +104,24 @@ void main_menu()
         win->update = main_menu_update;
     }
     sj_free(json);
+    return win;
 }
+
+
+
+
+
+
 
 int main(int argc, char * argv[])
 {
+//     update_hud_elements(NULL);
+    List *lst;
     gfc_audio_init(32,2,2,1,1,0);
     Sound *s = gfc_sound_load("audio/main.wav",80.0,1);
     //slog("Mix_LoadMUS: %s\n", Mix_GetError());
 
-    gfc_sound_play(s,100,50,1,1);
+//     gfc_sound_play(s,100,50,1,1);
     init_logger("gf2d.log");
     const Uint8 * keys;
     TileMap *tilemap;
@@ -135,12 +155,15 @@ int main(int argc, char * argv[])
 	char *out = malloc(14 * sizeof(char));
 	char *out2 = malloc(14 * sizeof(char));
     crystal_ent_new(vector2d(450,90));
+    trigger_ent_new(vector2d(200,250),"json/menus/building_menu.json");
  	game_manager_init(12);
 	game_instance *opp = game_new(0);
 	game_instance *player = game_new(1);
+    camera_set_dimensions(vector2d(1200,720));
+    camera_set_position(vector2d(0,0));
+    //init_hud("level/hudcp.json");
 	opponent_init(opp,player);
-    //load_game("saves/save.json");
-	main_menu();
+	Window *win = main_menu();
     while(!done)
     {
         if(dirty)
@@ -152,15 +175,17 @@ int main(int argc, char * argv[])
         SDL_PumpEvents();
         	keys = SDL_GetKeyboardState(NULL);
         	mouse_update();
-        if(enabled)
+
         windows_update_all();
-        sprintf(out,"%s%d","Resources: ",player->resources);
-        sprintf(out2,"%s%d","Opponent Resources: ",opp->resources);
+
+//         sprintf(out,"%s%d","Resources: ",player->resources);
+//         sprintf(out2,"%s%d","Opponent Resources: ",opp->resources);
         gf2d_graphics_clear_screen();
+
+
         tilemap_draw(tilemap);
         entity_manager_think_all();
         entity_manager_draw_all();
-		if(enabled)
         windows_draw_all();
         check_inputs();
         if(game_state() == 3 )
@@ -173,16 +198,16 @@ int main(int argc, char * argv[])
         }
         font_render(font_get_by_tag(FT_Small),out2,vector2d(200,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
         font_render(font_get_by_tag(FT_Small),out,vector2d(400,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
-        opponent_think();
+//         opponent_think();
         mouse_draw();
         gf2d_grahics_next_frame();
-        if (keys[SDL_SCANCODE_ESCAPE])enabled = 1;
+        if (keys[SDL_SCANCODE_ESCAPE])win->active = 1;
     }
     free(out);
     free(out2);
     tilemap_free(tilemap);
     Path_Map_free(path);
-    slog("---==== END ====---");
+//     slog("---==== END ====---");
     return 0;
 }
 /*eol@eof*/

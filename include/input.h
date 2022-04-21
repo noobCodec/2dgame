@@ -4,5 +4,11 @@
 #include <SDL.h>
 #include "entity.h"
 
-void check_inputs();
+List* check_inputs();
+
+void set_inputs(List *entities);
+
+List *get_inputs();
+
+void block(int value);
 #endif

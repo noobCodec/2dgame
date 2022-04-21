@@ -139,6 +139,7 @@ Entity *ranger_ent_new(Vector2D position,int fire_range)
     ent->rotation.y = 16;
     ent->damage = 30;
     ent->flip.x = 0;
+    ent->id = 3;
     ent->flip.y = 0;
     ent->health = 100;
     ent->max_health=100;

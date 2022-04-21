@@ -168,7 +168,7 @@ List* entity_click(int mx, int my,int init_x,int init_y)
     {
         if (!entity_manager.entity_list[i]._inuse)continue;
         if ((&entity_manager.entity_list[i].bounding)==NULL)continue;
-        if(shape_rect_collision(tmp,entity_manager.entity_list[i].bounding))
+        if(entity_manager.entity_list[i].team==0 && shape_rect_collision(tmp,entity_manager.entity_list[i].bounding))
         {
         	touched = gfc_list_append(touched,&entity_manager.entity_list[i]);
         }

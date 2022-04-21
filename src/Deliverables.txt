@@ -1,25 +1,32 @@
-5 different units to control -- DONE
 
-5 world features to impact gameplay
-	Mountains
-	Heal_Zone
-	Damage_Zone
-	Slow_Zone
-	Fast_Zone
+FINAL -- DELIVERABLES
 
-AI to control enemy team -- DONE
 
-Unit AI to follow basic orders and path find --DONE
-    Attack/Idle/Move
+Tech Tree - Upgrade Units Upgrade Buildings- Thematic Factions // DO IT
 
-Basic buildings and resource gathering -- DONE
+Singleplayer Campaign // CONTROL MENU
 
-Functioning Entity System --DONE
+Control menus // CONTROLS -- DONE
 
-Fully interactable environment
+Non Combat Objectives
 
-User Interface (HUD, Stats, Messages, menus)
+Dialogue Event System -- Walk onto tile trigger event
 
-File read / write access (high score list, saved games, saved songs, etc)
+Additional World Events
 
-README for how to play and see all game features (this should be in the git repo) --DONE
+Editors
+Level Editor
+
+COMMON FINAL DELIVERABLES
+
+Code compiles clean
+Steady Frame Rate of Rendering (constant FPS)
+Audio Implementation
+    Background Music & Sound Effects
+Menu System - game can be completely navigated through the menu system
+    From main menu, to option screens, to in game menus and back
+Research Component -(require approval) some special feature of your game enhanced by applying an advanced algorithm (Spacial Hashes, Finite State Machines, Machine Learning, Particle Systems, Physics systems, Network interface, etc)
+Seamless level transitions, where applicable
+First few (based on approval) levels completed.
+All assets should “agree” with design / quality / fidelity
+Content Editor (accessible through the menus) (approval)

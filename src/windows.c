@@ -186,7 +186,7 @@ void window_draw(Window *win)
 {
     int count,i;
     Vector2D offset;
-    if (!win)return;
+    if (!win || !win->active)return;
     if (!win->no_draw_generic)
     {
         draw_window_border_generic(win->dimensions,win->color);
@@ -207,7 +207,7 @@ void window_update(Window *win)
     List *updateList = NULL;
     List *updated = NULL;
     Element *e;
-    if (!win)return;
+    if (!win || !win->active)return;
     updateList = gfc_list_new();
     offset.x = win->dimensions.x + win->canvas.x;
     offset.y = win->dimensions.y + win->canvas.y;

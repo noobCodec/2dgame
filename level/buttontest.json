@@ -1,0 +1,30 @@
+{
+					"type": "button",
+					"name": "restart",
+					"id" : 60,
+					"bounds": [0,0,105,45],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "New Game",
+						"id" : 521,
+						"bounds": [0,0,105,45],
+						"color" : [255,255,255,255],
+						"text":"New Game",
+						"align": "middle",
+						"justify" : "center",
+						"style":"H2"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "level/button.json"
+						}
+}

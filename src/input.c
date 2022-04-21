@@ -1,16 +1,20 @@
 #include <SDL.h>
 #include <stdio.h>
 #include "entity.h"
+#include "camera.h"
+#include "hud.h"
 #include "simple_logger.h"
-void check_inputs()
+
+static List *ents = NULL;
+static int init_x;
+static int init_y;
+static int pressed;
+static int external_block = 0;
+List* check_inputs()
 {
+    int mx = 0;
+    int my = 0;
 	SDL_Event event;
-	static List *ents = NULL;
-	static int init_x;
-	static int init_y;
-	static int pressed;
-	int mx = 0;
-	int my = 0;
 	Entity *ent;
 	SDL_GetMouseState(&mx,&my);
 	while(SDL_PollEvent(&event))
@@ -27,10 +31,10 @@ void check_inputs()
         		{
         		if(ents)
         		{
+                slog("ents");
         		for(int i =0; i<gfc_list_get_count(ents);i++)
 					{
 						ent = gfc_list_get_nth(ents,i);
-                        slog("pathing");
 						if(ent->damage)
 						{
 						if(ent->path)
@@ -48,7 +52,7 @@ void check_inputs()
         	}
         	if(event.type == SDL_MOUSEBUTTONUP)
         	{
-        		if(event.button.button == SDL_BUTTON_LEFT)
+        		if(event.button.button == SDL_BUTTON_LEFT && !external_block)
         		{
         			if(ents)
         			{
@@ -63,6 +67,13 @@ void check_inputs()
         				ents = NULL;
         			}
         		}
+        		else if(event.button.button == SDL_BUTTON_LEFT)
+                {
+                    external_block = 0;
+                    pressed = 0;
+                }
+                slog("%d",gfc_list_get_count(ents));
+                update_hud_elements(ents);
         	}
         
 		    if(event.type == SDL_KEYDOWN)
@@ -128,6 +139,19 @@ void check_inputs()
 										ent->build = 7;
 									}
 								}
+                        break;
+                    case SDLK_l:
+                        camera_move(vector2d(60,0));
+                        break;
+                    case SDLK_u:
+                        camera_move(vector2d(-60,0));
+                        break;
+                    case SDLK_j:
+                        camera_move(vector2d(0,60));
+                        break;
+                    case SDLK_k:
+                        camera_move(vector2d(0,-60));
+                        break;
 						
 				}
 		    }
@@ -136,4 +160,18 @@ void check_inputs()
         	ShapeRect tmp = shape_rect_from_vector4d(vector4d(MIN(mx,init_x),MIN(my,init_y),MAX(mx,init_x)-MIN(mx,init_x),MAX(my,init_y)-MIN(my,init_y)));
     gf2d_draw_rect(shape_rect_to_sdl_rect(tmp),vector4d(0,255,0,255));
         }
+    return NULL;
+}
+void set_inputs(List *entities)
+{
+    gfc_list_delete(ents);
+    ents = entities;
+}
+List *get_inputs()
+{
+    return ents;
+}
+void block(int value)
+{
+    external_block = value;
 }

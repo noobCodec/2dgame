@@ -158,6 +158,7 @@ Entity *mage_ent_new(Vector2D position,int fire_range)
     ent->path = NULL;
     ent->dead = 0;
     ent->draw = mage_draw;
+    ent->id = 1;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x-8,position.y-8,32,32));
     ent->enemy = NULL;
     vector2d_copy(ent->position,position);

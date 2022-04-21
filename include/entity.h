@@ -9,10 +9,12 @@
 #include "gfc_types.h"
 #include "gf2d_draw.h"
 #include "actor.h"
+#include "windows.h"
 typedef struct ENTITY_S
 {
     Uint8       _inuse;     /**<this flag keeps track if this entity is active or free to reassign*/
     Uint8		build;
+    Uint8       id;
     Uint8       blocked;
     Uint8 		dead;
     Uint8		damage;
@@ -37,6 +39,7 @@ typedef struct ENTITY_S
     Actor *actor;
     ShapeCircle  range;
     ShapeRect    bounding;  /**<describe the bounding box around this entity*/
+    Window *win;
     void (*think)(struct ENTITY_S *self);   /**<a pointer to a think function for this entity*/
     void (*draw)(struct ENTITY_S *self);
 }Entity;

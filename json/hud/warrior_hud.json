@@ -1,0 +1,48 @@
+ {
+  "actor": {
+    "sprite": "images/hud_stuff/warrior_top.png",
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "framesPerLine": 16,
+    "scale": [
+      1,
+      1
+    ],
+    "color": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "colorSpecial": [
+      255,
+      100,
+      100,
+      255
+    ],
+    "actionList": [
+      {
+        "action": "idle",
+        "type": "loop",
+        "startFrame": 0,
+        "endFrame": 0,
+        "frameRate": 0
+      },
+      {
+        "action": "high",
+        "type": "loop",
+        "startFrame": 0,
+        "endFrame": 0,
+        "frameRate": 0
+      },
+      {
+        "action": "press",
+        "type": "loop",
+        "startFrame": 0,
+        "endFrame": 0,
+        "frameRate": 0
+      }
+    ]
+  }
+}
+

@@ -3,6 +3,7 @@
 #include "simple_json.h"
 #include "tile_map.h"
 #include "camera.h"
+#include "shape.h"
 
 TileMap *tilemap_new()
 {
@@ -97,13 +98,24 @@ void tilemap_free(TileMap *map)
 
 void tilemap_draw(TileMap *map)
 {
+    SDL_Rect camera;
+    Vector2D offset,drawPosition,parallax;
     int i;
     if (!map)return;
     if (!map->tileset)return;
     if (!map->tilemap)return;
+    offset = camera_get_offset();
     for (i = 0; i < map->tilemap_count; i++)
     {
         if (!map->tilemap[i])continue;
+        drawPosition.x = (i % map->tilemap_width) * map->tileset->tile_width;
+        drawPosition.y = (i / map->tilemap_width) * map->tileset->tile_height;
+        SDL_Rect tmp = shape_rect_to_sdl_rect(shape_rect_from_vector4d(vector4d(drawPosition.x,drawPosition.y,map->tileset->tile_width,map->tileset->tile_height)));
+        gf2d_draw_rect(tmp,vector4d(255,255,255,255));
+            if(!camera_rect_on_screen(tmp))
+        {
+            continue;
+        }
         tile_set_draw(
             map->tileset,
             map->tilemap[i] - 1,

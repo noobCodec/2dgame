@@ -26,6 +26,8 @@ typedef struct Window_S
 {
     int _inuse;             /**<do not touch*/
     int no_draw_generic;    /**<if true, do not use the generic window draw style*/
+    int active;
+    int dead;
     List *elements;         /**<all the components of the window*/
     Sprite *background;     /**<background image*/
     Sprite *border;         /**<border sprites*/

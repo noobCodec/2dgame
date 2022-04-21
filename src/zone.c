@@ -1,4 +1,5 @@
 
+
 #include "zone.h"
 #include "simple_logger.h"
 typedef struct
@@ -41,6 +42,7 @@ Entity *new_fast_zone(Vector2D position,int size)
         slog("no space for zone");
         return NULL;
     }
+    ent->team = 255;
     ent->think = zone_think;
     ent->type = 1;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,size,size));
@@ -59,6 +61,7 @@ Entity *new_slow_zone(Vector2D position,int size)
         return NULL;
     }
     ent->type = 2;
+    ent->team = 255;
     ent->think = zone_think;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,size,size));
     ent->enemy = NULL;
@@ -75,6 +78,7 @@ Entity *new_heal_zone(Vector2D position,int size)
         return NULL;
     }
     ent->type = 3;
+    ent->team = 255;
     ent->think = zone_think;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,size,size));
     ent->enemy = NULL;
@@ -91,6 +95,7 @@ Entity *new_damage_zone(Vector2D position,int size)
         return NULL;
     }
     ent->type = 4;
+    ent->team = 255;
     ent->think = zone_think;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,size,size));
     ent->enemy = NULL;

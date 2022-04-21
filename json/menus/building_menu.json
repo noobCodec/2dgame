@@ -1,0 +1,105 @@
+
+{
+"window":{
+    "color" : [255,255,255, 255],
+    "dimensions" : [50,50,200,200],
+    "elements":
+    [
+      {
+        "type": "list",
+        "name": "list",
+        "id" : 0,
+        "bounds": [10,24,400,220],
+        "color" : [255,255,255,255],
+        "style": "vertical",
+        "item_size" : [100,36],
+        "elements":
+        [
+            {
+                "type": "label",
+                "name": "Welcome",
+                "id" : 12,
+                "bounds": [0,-16,180,32],
+                "color" : [255,255,255,255],
+                "text":"Building",
+                "justify" : "center",
+                "style":"H1"
+            },
+            {
+            "type": "list",
+            "name": "continue",
+            "id" : 20,
+            "bounds": [25,-30,780,32],
+            "color" : [255,255,255,255],
+            "style": "vertical",
+            "item_size" : [75,64],
+            "elements":
+            [
+            {
+                "type": "button",
+                "name": "cancel",
+                "id" : 52,
+                "bounds": [0,0,110,50],
+                "color" : [255,255,255,255],
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "new",
+                    "id" : 521,
+                    "bounds": [-30,-10,168,64],
+                    "color" : [255,255,255,255],
+                    "text":"cancel",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"small"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 522,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.json"
+                    }
+                },
+                {
+                "type": "button",
+                "name": "cancel",
+                "id" : 52,
+                "bounds": [0,0,110,50],
+                "color" : [255,255,255,255],
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "new",
+                    "id" : 521,
+                    "bounds": [-30,-10,168,64],
+                    "color" : [255,255,255,255],
+                    "text":"cancel",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"small"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 522,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.json"
+                    }
+                }
+            ]
+            }
+        ]
+    }
+    ]
+    }
+}
+
