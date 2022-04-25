@@ -24,12 +24,6 @@ Uint32 mage_attack(Uint32 interval,void *data)
 		self->velocity = vector2d(0,0);
 		self->path = NULL;
 	}
-		Path *pat = path_new();
-		Vector2D vec = vector2d(-1*self->position.x-self->enemy->position.x,-1 *self->position.y-self->enemy->position.y);
-		vector2d_set_magnitude(&vec,-20);
-		path_find(pat,self->position.x + vec.x,self->position.y+vec.y,self->position.x,self->position.y);
-		self->path = pat;
-	
     return 0;
 }
 void mage_think(Entity *self)
@@ -75,7 +69,7 @@ void mage_think(Entity *self)
         self->blocked = 1;
     }
     Vector2D out = travel_location(self->path,self->position.x,self->position.y);
-	if(self->effects & 2)
+	if(self->effects & 2 || self->effects & 32)
 	{
 		out.x *=2;
 		out.y *=2;
@@ -114,7 +108,7 @@ void mage_think(Entity *self)
 			gem_actor_set_action(self->actor,"idle");
 		}
 	}
-	self->effects = 0;
+	self->effects &= 32;
 }
 void mage_draw(Entity *self)
 {
@@ -139,7 +133,7 @@ Entity *mage_ent_new(Vector2D position,int fire_range)
         slog("no space for mage");
         return NULL;
     }
-    gem_actor_load(tmp,"level/mage.json");
+    gem_actor_load(tmp,"actors/mage.json");
         ent->think = mage_think;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);

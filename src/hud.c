@@ -1,7 +1,20 @@
 #include "hud.h"
 #include "element_button.h"
+#include "entity.h"
 #include "simple_logger.h"
 static Window *my_hud = NULL;
+static Window *menu_hud = NULL;
+static int external_block = 0;
+
+
+void apply_block(int i)
+{
+    external_block = i;
+    if(my_hud)
+    my_hud->active = i-1;
+    if(menu_hud)
+    menu_hud->active = i-1;
+}
 void update_hud(Window *win,List *updateList)
 {
     int i,count;
@@ -56,6 +69,7 @@ SJson *make_vec2d(Vector2D x)
 }
 void update_hud_elements(List *ents)
 {
+    if(external_block)return;
     SJson *json = NULL;
     char s[25];
     int i = 0;
@@ -85,7 +99,7 @@ void update_hud_elements(List *ents)
         sj_object_insert(label,"name",sj_new_str("unit"));
         sj_object_insert(label,"id",sj_new_int(900));
         sj_object_insert(label,"bounds",make_vec4d(vector4d(-30,20,105,45)));
-        sj_object_insert(label,"color",make_vec4d(vector4d(255,255,255,255)));
+        sj_object_insert(label,"color",make_vec4d(vector4d(0,0,0,255)));
         switch(ent->id)
         {
             case 1:
@@ -141,7 +155,7 @@ void update_hud_elements(List *ents)
         sj_object_insert(label,"name",sj_new_str("generic"));
         sj_object_insert(label,"id",sj_new_int(900));
         sj_object_insert(label,"bounds",make_vec4d(vector4d(0,0,350,32)));
-        sj_object_insert(label,"color",make_vec4d(vector4d(255,255,255,255)));
+        sj_object_insert(label,"color",make_vec4d(vector4d(0,0,0,255)));
         sprintf(s, "HP: %d/%d", ent->health, ent->max_health);
         sj_object_insert(label,"text",sj_new_str(s));
         sj_object_insert(label,"justify",sj_new_str("left"));
@@ -155,18 +169,97 @@ void update_hud_elements(List *ents)
     sj_save(json,"level/control.json");
     sj_free(json);
     window_free(my_hud);
+    my_hud = NULL;
     init_hud("level/control.json");
     return;
 
 
 
 }
+void close_building_hud()
+{
+    window_free(menu_hud);
+    menu_hud = NULL;
+}
+/* ID LIST
+ * Mage = 1
+ * Rogue = 2
+ * Ranger = 3
+ * Goblin = 4
+ * Warrior = 5
+ * Tent = 6
+ */
+void update_hud_building(Window *win,List *updateList)
+{
+    int i,count;
+    Element *e;
+    ButtonElement *here;
+    LabelElement *j;
+    if (!win)return;
+    if (!updateList)return;
+    count = gfc_list_get_count(updateList);
 
+    for (i = 0; i < count; i++)
+    {
+        e = gfc_list_get_nth(updateList,i);
+        switch(e->index)
+        {
+            case 1:
+                apply_upgrade(2);
+                break;
+            case 2:
+                apply_upgrade(5);
+                break;
+            case 3:
+                apply_upgrade(3);
+                break;
+            case 4:
+                apply_upgrade(4);
+                break;
+            case 5:
+                apply_upgrade(1);
+                break;
+            case 6:
+                apply_upgrade(6);
+                break;
+            case 7:
+                close_building_hud();
+                break;
+        }
+    }
+    return;
+}
+void init_hud_building(const char *file)
+{
+    if(menu_hud!=NULL)
+    {
+     window_free(menu_hud);
+     menu_hud = NULL;
+    }
+    Window *win;
+    SJson *json = NULL;
+    json = sj_load(file);
+    win = window_load_from_json(json);
+    if (win)
+    {
+        win->update = update_hud_building;
+    }
+    win->active = 1;
+    win->no_draw_generic = 1;
+    sj_free(json);
+    menu_hud = win;
+}
 void open_building(Entity *bding)
 {
+    init_hud_building("json/menus/building_menu.json");
 }
 void init_hud(const char *file)
 {
+    if(my_hud==NULL)
+    {
+     window_free(my_hud);
+     my_hud = NULL;
+    }
     Window *win;
     SJson *json = NULL;
     json = sj_load(file);
@@ -179,5 +272,7 @@ void init_hud(const char *file)
     sj_free(json);
     my_hud = win;
 }
+
+
 
 

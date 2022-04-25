@@ -224,6 +224,18 @@ List* touch(Entity *self)
     }
     return nodes;
 }
+void apply_upgrade(int id)
+{
+    for (int i = 0;i < entity_manager.max_entities;i++)
+    {
+        Entity* other = &entity_manager.entity_list[i];
+        if(other->id == id)
+        {
+        	other->effects |= 32;
+        }
+    }
+    return;
+}
 Entity* overlap(Entity *ent)
 {
     int i;
@@ -237,13 +249,13 @@ Entity* overlap(Entity *ent)
         if(ent->team != other->team && ent != other && shape_rect_circle_collision(ent->range,other->bounding))
         {
 			ret = &entity_manager.entity_list[i]; 
-        	if(other->harvest==0)
+        	if(other->immune==0)
         	{
         		return &entity_manager.entity_list[i];
         	}
         }
     }
-    return ret;
+    return NULL;
 }
 void Entity_draw_hp(Entity *self)
 {

@@ -118,6 +118,7 @@ Entity *building_ent_new(Vector2D position)
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,128,112));
     ent->rotation.x = 0;
     ent->rotation.y = 0;
+    ent->id = 6;
     ent->build = 1;
     vector2d_copy(ent->position,position);
     return ent;

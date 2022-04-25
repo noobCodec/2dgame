@@ -1,26 +1,27 @@
+
 {
 "window":{
     "color" : [255,255,255, 255],
-    "dimensions" : [100,100,400,200],
+    "dimensions" : [200,240,220,150],
     "elements":
     [
       {
         "type": "list",
         "name": "list",
         "id" : 0,
-        "bounds": [10,24,780,220],
+        "bounds": [10,24,400,220],
         "color" : [255,255,255,255],
         "style": "vertical",
-        "item_size" : [100,36],
+        "item_size" : [100,20],
         "elements":
         [
             {
                 "type": "label",
                 "name": "Welcome",
                 "id" : 12,
-                "bounds": [0,-15,350,32],
-                "color" : [255,255,255,255],
-                "text":"Welcome to the Game",
+                "bounds": [-90,-15,350,32],
+                "color" : [200,0,255,255],
+                "text":"Quest Complete",
                 "justify" : "center",
                 "style":"H1"
             },
@@ -28,9 +29,9 @@
                 "type": "label",
                 "name": "Welcome",
                 "id" : 12,
-                "bounds": [0,0,350,32],
-                "color" : [65,0,65,255],
-                "text":"Right Click on the Tent TOP LEFT",
+                "bounds": [-120,-15,350,32],
+                "color" : [0,0,0,255],
+                "text":"Princess Says:",
                 "justify" : "center",
                 "style":"H1"
             },
@@ -38,9 +39,19 @@
                 "type": "label",
                 "name": "Welcome",
                 "id" : 12,
-                "bounds": [0,0,350,32],
-                "color" : [65,0,65,255],
-                "text":"Select Your Tent and hit W to make a Mage",
+                "bounds": [-80,-15,350,32],
+                "color" : [0,0,0,255],
+                "text":"Thank you for saving me",
+                "justify" : "center",
+                "style":"H1"
+            },
+            {
+                "type": "label",
+                "name": "Welcome",
+                "id" : 12,
+                "bounds": [-140,-15,350,32],
+                "color" : [0,0,0,255],
+                "text":"You Say: ",
                 "justify" : "center",
                 "style":"H1"
             },
@@ -48,10 +59,10 @@
             "type": "list",
             "name": "continue",
             "id" : 20,
-            "bounds": [0,0,780,32],
+            "bounds": [-15,-15,780,32],
             "color" : [255,255,255,255],
             "style": "horizontal",
-            "item_size" : [256,32],
+            "item_size" : [110,48],
             "elements":
             [
                 {
@@ -69,10 +80,10 @@
 						"id" : 521,
 						"bounds": [0,0,105,45],
 						"color" : [255,255,255,255],
-						"text":"Continue",
+						"text":"No Problem",
 						"align": "middle",
 						"justify" : "center",
-						"style":"H2"
+						"style":"normal"
 						},
 					"actor" :
 						{
@@ -87,7 +98,7 @@
 				{
 					"type": "button",
 					"name": "restart",
-					"id" : 60,
+					"id" : 62,
 					"bounds": [0,0,105,45],
 					"color" : [255,255,255,255],
 					"highColor" : [255,255,255,255],
@@ -95,14 +106,14 @@
 					"label" :
 						{
 						"type": "label",
-						"name": "New Game",
+						"name": "Continue",
 						"id" : 521,
 						"bounds": [0,0,105,45],
 						"color" : [255,255,255,255],
-						"text":"New Game",
+						"text":"Prepare to Die",
 						"align": "middle",
 						"justify" : "center",
-						"style":"H2"
+						"style":"normal"
 						},
 					"actor" :
 						{
@@ -116,8 +127,12 @@
 				}
             ]
             }
+
         ]
     }
     ]
     }
 }
+
+
+

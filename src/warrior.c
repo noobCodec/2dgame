@@ -30,6 +30,11 @@ Uint32 warrior_attack(Uint32 interval,void *data)
 }
 void warrior_think(Entity *self)
 {
+    if(self->effects & 32)
+    {
+        self->effects ^= 32;
+        self->max_health *= 2;
+    }
 	if(self->effects & 8 && self->health < self->max_health)
 	{
 		self->health += 1;
@@ -66,7 +71,7 @@ void warrior_think(Entity *self)
 	self->enemy = overlap(self);
 	if(self->enemy && !self->blocked)
 	{
-	    SDL_AddTimer(5000,warrior_attack,self);
+	    SDL_AddTimer(3000,warrior_attack,self);
         self->blocked = 1;
     }
     Vector2D out = travel_location(self->path,self->position.x,self->position.y);
@@ -83,7 +88,7 @@ void warrior_think(Entity *self)
     //slog("%f:%f",out.x,out.y);
 	if(out.x!=0 || out.y!=0)
 	{
-		if(strcmp(gem_actor_get_current_action(self->actor)->name,"move"))
+		if(strcmp(gem_actor_get_current_action(self->actor)->name,"move") && !self->enemy)
 		{
 			gem_actor_set_action(self->actor,"move");
 		}
@@ -95,8 +100,7 @@ void warrior_think(Entity *self)
 	}
 	else if(self->path && out.x ==0 && out.y==0)
 	{
-		slog("freed");
-		if(strcmp(gem_actor_get_current_action(self->actor)->name,"idle"))
+		if(strcmp(gem_actor_get_current_action(self->actor)->name,"idle")&& !self->enemy)
 		{
 					gem_actor_set_action(self->actor,"idle");
 		}
@@ -136,7 +140,7 @@ Entity *warrior_ent_new(Vector2D position,int fire_range)
         slog("no space for mage");
         return NULL;
     }
-    gem_actor_load(tmp,"level/warrior.json");
+    gem_actor_load(tmp,"actors/warrior.json");
         ent->think = warrior_think;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);

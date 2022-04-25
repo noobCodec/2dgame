@@ -32,6 +32,7 @@
 #include "gfc_audio.h"
 #include "element_button.h"
 #include "hud.h"
+#include "princess.h"
 static int enabled = 0;
 static int done = 0;
 static int dirty = 0;
@@ -44,9 +45,7 @@ void restart_game()
     game_instance *p2 = game_new(1);
     opponent_init(p1,p2);
 }
-
-
-int main_menu_update(Window *win,List *updateList)
+void welcome_menu_update(Window *win,List *updateList)
 {
     int i,count;
     Element *e;
@@ -92,7 +91,49 @@ int main_menu_update(Window *win,List *updateList)
 
         }
     }
-    return 0;
+
+
+
+}
+
+void main_menu_update(Window *win,List *updateList)
+{
+    int i,count;
+    Element *e;
+    ButtonElement *here;
+    LabelElement *j;
+    if (!win)return 0;
+    if (!updateList)return 0;
+    count = gfc_list_get_count(updateList);
+    for (i = 0; i < count; i++)
+    {
+        slog("UPDATE");
+        e = gfc_list_get_nth(updateList,i);
+        switch(e->index)
+        {
+            case 64:
+            	done = 1;
+                slog("ok");
+                break;
+            case 62:
+                slog("cancel");
+                save_game();
+                break;
+            case 61:
+                apply_block(0);
+            	win->active = 0;
+            	break;
+            case 60:
+            	restart_game();
+            	break;
+            case 63:
+                game_manager_clear();
+                entity_manager_clear();
+                dirty = 1;
+                load_game("saves/save.json");
+
+        }
+    }
 }
 Window* main_menu()
 {
@@ -108,6 +149,20 @@ Window* main_menu()
     return win;
 }
 
+Window* welcome_menu()
+{
+    Window *win;
+    SJson *json = NULL;
+    json = sj_load("json/menus/welcome_menu.json");
+    win = window_load_from_json(json);
+    win->active = 1;
+    if (win)
+    {
+        win->update = main_menu_update;
+    }
+    sj_free(json);
+    return win;
+}
 int main(int argc, char * argv[])
 {
     int lop = 0;
@@ -145,24 +200,21 @@ int main(int argc, char * argv[])
 	set_path(path->path,path->pathmap_width,path->pathmap_length);
 	font_init(40);
 	populate_fonts("level/font.json");
-	windows_init(20);
+	windows_init(40);
 	int resources = 0;
 	load_obstacles(tilemap);
-	char *out = malloc(14 * sizeof(char));
-	char *out2 = malloc(14 * sizeof(char));
-    crystal_ent_new(vector2d(450,90));
-    trigger_ent_new(vector2d(200,250),"json/menus/building_menu.json");
  	game_manager_init(12);
 	game_instance *opp = game_new(0);
 	game_instance *player = game_new(1);
     camera_set_dimensions(vector2d(1200,720));
     camera_set_position(vector2d(0,0));
     init_hud("level/hudcp.json");
-	opponent_init(opp,player);
+// 	opponent_init(opp,player);
+    trigger_ent_new(vector2d(180,90),"json/editor/leveleditor.json");
 	Window *win = main_menu();
+//     welcome_menu();
     while(!done)
     {
-//         slog("START LOOP: %d",lop);
         if(dirty)
         {
          opp = get_game(1);
@@ -175,35 +227,20 @@ int main(int argc, char * argv[])
         mouse_update();
         windows_update_all();
 
-//         sprintf(out,"%s%d","Resources: ",player->resources);
-//         sprintf(out2,"%s%d","Opponent Resources: ",opp->resources);
-
-
-
         tilemap_draw(tilemap);
         entity_manager_think_all();
         entity_manager_draw_all();
         check_inputs();
         windows_draw_all();
-
-        if(game_state() == 3 )
-        {
-        	font_render(font_get_by_tag(FT_H1),"YOU WON",vector2d(600,300),gfc_color_from_vector4(vector4d(0,255,0,255)));
-        }
-        else if(game_state()==4)
-        {
-        	font_render(font_get_by_tag(FT_H1),"YOU LOST",vector2d(600,300),gfc_color_from_vector4(vector4d(255,0,0,255)));
-        }
-        font_render(font_get_by_tag(FT_Small),out2,vector2d(200,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
-        font_render(font_get_by_tag(FT_Small),out,vector2d(400,700),gfc_color_from_vector4(vector4d(50,0,0,255)));
 //         opponent_think();
         mouse_draw();
-//         slog("END LOOP: %d",lop++);
         gf2d_grahics_next_frame();
-        if (keys[SDL_SCANCODE_ESCAPE])win->active = 1;
+        if (keys[SDL_SCANCODE_ESCAPE])
+        {
+            win->active = 1;
+            apply_block(1);
+        }
     }
-    free(out);
-    free(out2);
     tilemap_free(tilemap);
     Path_Map_free(path);
 //     slog("---==== END ====---");

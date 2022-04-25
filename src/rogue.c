@@ -70,8 +70,17 @@ void rogue_think(Entity *self)
 	self->enemy = overlap(self);
 	if(self->enemy && !self->blocked)
 	{
+        if(self->effects & 32)
+        {
+            self->effects ^= 32;
+            SDL_AddTimer(100,rogue_attack,self);
+            self->blocked = 1;
+        }
+        else
+        {
 	    SDL_AddTimer(500,rogue_attack,self);
         self->blocked = 1;
+        }
     }
     Vector2D out = travel_location(self->path,self->position.x,self->position.y);
     if(self->effects & 2)
@@ -140,7 +149,7 @@ Entity *rogue_ent_new(Vector2D position,int fire_range)
         slog("no space for mage");
         return NULL;
     }
-    gem_actor_load(tmp,"level/rogue.json");
+    gem_actor_load(tmp,"actors/rogue.json");
         ent->think = rogue_think;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);

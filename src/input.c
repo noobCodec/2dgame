@@ -29,7 +29,6 @@ List* check_inputs()
     }
     if(mouse_button_pressed(2))
     {
-        slog("pressed");
         if(ents)
         {
             for(int i =0; i<gfc_list_get_count(ents);i++)
@@ -63,7 +62,15 @@ List* check_inputs()
             gfc_list_delete(ents);
             ents = NULL;
         }
-        update_hud_elements(ents);
+        if(gfc_list_get_count(ents)==1)
+        {
+            Entity *candidate = gfc_list_get_nth(ents,0);
+            update_hud_elements(ents);
+            if(candidate->build)
+                open_building(candidate);
+        }
+        else
+            update_hud_elements(ents);
     }
     else if(mouse_button_released(0))
     {
@@ -207,9 +214,29 @@ List* check_inputs()
                     case SDLK_k:
                         camera_move(vector2d(0,-60));
                         break;
-
 				}
 		    }
+//             if(event.type==SDL_MOUSEWHEEL)
+//             {
+//                 if(event.wheel.y > 0)
+//                 {
+//                     Vector2D dim = camera_get_dimensions();
+//                     dim.x /= 1.02;
+//                     dim.y /= 1.02;
+//                     camera_set_dimensions(dim);
+//
+//
+//                 }
+//
+//                 else if(event.wheel.y < 0)
+//                 {
+//                     Vector2D dim = camera_get_dimensions();
+//                     dim.x *= 1.02;
+//                     dim.y *= 1.02;
+//                     camera_set_dimensions(dim);
+//
+//                 }
+            //}
         }
         if(pressed){
         	ShapeRect tmp = shape_rect_from_vector4d(vector4d(MIN(mx,init_x),MIN(my,init_y),MAX(mx,init_x)-MIN(mx,init_x),MAX(my,init_y)-MIN(my,init_y)));

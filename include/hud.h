@@ -11,8 +11,13 @@ void update_hud(Window *win,List *updateList);
 
 void update_hud_elements(List *ents);
 
+
+void open_building(Entity *bding);
+
 void draw_hud();
 
+void apply_block(int i);
 
+void close_building_hud();
 #endif
 

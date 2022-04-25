@@ -1,5 +1,6 @@
 #include "mouse.h"
 #include "actor.h"
+#include "camera.h"
 #include <SDL.h>
 
 typedef struct
@@ -31,8 +32,10 @@ void mouse_update()
 {
     int x,y;
     gem_actor_next_frame(&mouse.actor);
+
     memcpy(&mouse.mouse[1],&mouse.mouse[0],sizeof(MouseState));
     mouse.mouse[0].buttons = SDL_GetMouseState(&x,&y);
+//     camera_set_position(vector2d(x,y));
     vector2d_set(mouse.mouse[0].position,x,y);
 }
 

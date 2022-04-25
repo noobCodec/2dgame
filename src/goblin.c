@@ -14,13 +14,17 @@ Uint32 goblin_attack(Uint32 interval,void *data)
 				gem_actor_set_action(self->actor,"attack");
 	    }
 		self->enemy->health -= self->damage;
-		slog("%d",self->team);
 		self->enemy->inflict = self->team;
     }
     return 0;
 }
 void goblin_think(Entity *self)
 {
+    if(self->effects & 32)
+    {
+        self->effects ^= 32;
+        self->range.r *= 1.2;
+    }
 	if(self->effects & 8 && self->health < self->max_health)
 	{
 		self->health += 1;
@@ -127,7 +131,7 @@ Entity *goblin_ent_new(Vector2D position,int fire_range)
         slog("no space for mage");
         return NULL;
     }
-    gem_actor_load(tmp,"level/goblin.json");
+    gem_actor_load(tmp,"actors/goblin.json");
     ent->think = goblin_think;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);

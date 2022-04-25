@@ -2,44 +2,39 @@
 #include <string.h>
 #include "entity.h"
 #include "simple_logger.h"
+#include "element_button.h"
+#include "element_list.h"
 #include "gfc_text.h"
 #include <time.h>
 #include <sys/stat.h>
 static time_t modified = 0;
+static char my_name[256];
 
+void re_label(Element *e, char *text)
+{
+    if(!e) return;
+    LabelElement *j = ((LabelElement*)((ButtonElement*)e->data)->label->data);
+    strncpy(j->text,text,strlen(j->text));
+
+
+}
+static int updates = 0;
+static int choice = 0;
 int trigger_update(Window *win,List *updateList)
 {
-    int i,count;
-    Element *e;
-    LabelElement *j;
-    if (!win)return 0;
-    if (!updateList)return 0;
-    count = gfc_list_get_count(updateList);
-
-    for (i = 0; i < count; i++)
-    {
-        e = gfc_list_get_nth(updateList,i);
-        switch(e->index)
-        {
-            case 61:
-            	win->active = 0;
-                win->dead = 1;
-            	break;
-        }
-    }
     return 0;
 }
 
 void trigger_ent_think(Entity *self)
 {
     struct stat file_stat;
-    stat("json/menus/building_menu.json", &file_stat);
+    stat(my_name, &file_stat);
 
     if(file_stat.st_mtime > modified)
     {
         modified = file_stat.st_mtime;
         window_free(self->win);
-        SJson *sj = sj_load("json/menus/building_menu.json");
+        SJson *sj = sj_load(my_name);
         Window *window = window_load_from_json(sj);
         window->update = trigger_update;
         sj_free(sj);
@@ -57,7 +52,8 @@ void trigger_ent_think(Entity *self)
 Entity *trigger_ent_new(Vector2D position,char *text)
 {
     struct stat file_stat;
-    stat("json/menus/building_menu.json", &file_stat);
+    stat(text, &file_stat);
+
     modified = file_stat.st_mtime;
     Entity *ent;
     ent = entity_new();
@@ -78,6 +74,7 @@ Entity *trigger_ent_new(Vector2D position,char *text)
         entity_free(ent);
         return NULL;
     }
+    strncpy(my_name,text,250);
     window->update = trigger_update;
     ent->draw_scale = vector2d(1,1);
     ent->velocity = vector2d(0,0);

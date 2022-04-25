@@ -21,6 +21,11 @@ Uint32 ranger_attack(Uint32 interval,void *data)
 }
 void ranger_think(Entity *self)
 {
+    if(self->effects & 32)
+    {
+        self->effects ^= 32;
+        self->damage *= 2;
+    }
 	if(self->effects & 8 && self->health < self->max_health)
 	{
 		self->health += 1;
@@ -127,7 +132,7 @@ Entity *ranger_ent_new(Vector2D position,int fire_range)
         slog("no space for mage");
         return NULL;
     }
-    gem_actor_load(tmp,"level/ranger.json");
+    gem_actor_load(tmp,"actors/ranger.json");
         ent->think = ranger_think;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);

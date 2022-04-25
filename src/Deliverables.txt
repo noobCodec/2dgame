@@ -2,30 +2,28 @@
 FINAL -- DELIVERABLES
 
 
-Tech Tree - Upgrade Units Upgrade Buildings- Thematic Factions // DO IT
+Tech Tree - Upgrade Units Upgrade Buildings- Thematic Factions // DONE
 
-Singleplayer Campaign // CONTROL MENU
+Singleplayer Campaign // IN PROGRESS
 
-Control menus // CONTROLS -- DONE
+Control menus // DONE
 
-Non Combat Objectives
+Non Combat Objectives // Additional World Events
 
-Dialogue Event System -- Walk onto tile trigger event
-
-Additional World Events
+Dialogue Event System -- DIALOGUE
 
 Editors
 Level Editor
 
 COMMON FINAL DELIVERABLES
 
-Code compiles clean
-Steady Frame Rate of Rendering (constant FPS)
-Audio Implementation
+Code compiles clean //DONE
+Steady Frame Rate of Rendering (constant FPS) // DONE
+Audio Implementation // DONE
     Background Music & Sound Effects
-Menu System - game can be completely navigated through the menu system
+Menu System - game can be completely navigated through the menu system // DONE
     From main menu, to option screens, to in game menus and back
-Research Component -(require approval) some special feature of your game enhanced by applying an advanced algorithm (Spacial Hashes, Finite State Machines, Machine Learning, Particle Systems, Physics systems, Network interface, etc)
+Research Component -(require approval) some special feature of your game enhanced by applying an advanced algorithm (Spacial Hashes, Finite State Machines, Machine Learning, Particle Systems, Physics systems, Network interface, etc) // DONE
 Seamless level transitions, where applicable
 First few (based on approval) levels completed.
 All assets should “agree” with design / quality / fidelity

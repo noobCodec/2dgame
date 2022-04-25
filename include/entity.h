@@ -18,6 +18,7 @@ typedef struct ENTITY_S
     Uint8       blocked;
     Uint8 		dead;
     Uint8		damage;
+    Uint8       immune;
     Uint8		harvest;
     Uint8       team;
     Uint8		inflict;
@@ -37,6 +38,7 @@ typedef struct ENTITY_S
     Path *path;
     struct ENTITY_S *enemy;
     Actor *actor;
+    List *guards;
     ShapeCircle  range;
     ShapeRect    bounding;  /**<describe the bounding box around this entity*/
     Window *win;
@@ -94,7 +96,7 @@ Entity* overlap(Entity *entity);
 void Entity_draw_hp(Entity *ent);
 
 List* resources();
-
+void apply_upgrade(int id);
 List* touch(Entity *self);
 Entity* heal(Entity *self);
 

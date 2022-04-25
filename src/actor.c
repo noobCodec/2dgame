@@ -154,6 +154,7 @@ ActionList *gem_action_list_load_json(
     SJson *item = NULL;
     int actionCount,i;
     int x,y,z,k;
+    float m,l;
     if ((!json)||(!filename))
     {
         slog("missing parameters");
@@ -186,13 +187,13 @@ ActionList *gem_action_list_load_json(
     sj_get_integer_value(sj_object_get_value(actor,"frameHeight"),&actionList->frameHeight);
     sj_get_integer_value(sj_object_get_value(actor,"framesPerLine"),&actionList->framesPerLine);
     tmp = sj_object_get_value(actor,"scale");
-    sj_get_integer_value(sj_array_get_nth(tmp,0),&x);
-    sj_get_integer_value(sj_array_get_nth(tmp,1),&y);
-    actionList->scale = vector2d(x,y);
+    sj_get_float_value(sj_array_get_nth(tmp,0),&m);
+    sj_get_float_value(sj_array_get_nth(tmp,1),&l);
+    actionList->scale = vector2d(m,l);
     tmp = sj_object_get_value(actor,"drawOffset");
-    sj_get_integer_value(sj_array_get_nth(tmp,0),&x);
-    sj_get_integer_value(sj_array_get_nth(tmp,1),&y);
-    actionList->drawOffset = vector2d(x,y);
+    sj_get_float_value(sj_array_get_nth(tmp,0),&m);
+    sj_get_float_value(sj_array_get_nth(tmp,1),&l);
+    actionList->drawOffset = vector2d(m,l);
     tmp = sj_object_get_value(actor,"color");
     sj_get_integer_value(sj_array_get_nth(tmp,0),&x);
     sj_get_integer_value(sj_array_get_nth(tmp,1),&y);
@@ -413,8 +414,8 @@ void gem_actor_draw(
         drawScale.x *= scale->x;
         drawScale.y *= scale->y;
     }
-    
     vector2d_add(drawPosition,position,actor->al->drawOffset);
+
 	gf2d_sprite_draw(
 		    actor->sprite,
 		    drawPosition,
