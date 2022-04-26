@@ -41,7 +41,7 @@ void element_label_draw(Element *element,Vector2D offset)
             position.y += (element->bounds.h - size.y);
             break;
     }
-    //slog("%f:%f",position.x,position.y);
+    if(strlen(label->text) > 0)
     text_draw_line(label->text,label->style,element->color,position);
 }
 

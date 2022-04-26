@@ -22,6 +22,16 @@ static char text[255] = {0};
 static char *composition;
 static int cursor;
 static int selection_len;
+void append(char* s, char c) {
+        int len = strlen(s);
+        s[len] = c;
+        s[len+1] = '\0';
+}
+void remove_char(char* s) {
+        int len = strlen(s);
+        if(len>0)
+        s[len-1] = '\0';
+}
 int text_input_update(Window *win,List *updateList)
 {
     int i,count;
@@ -82,6 +92,15 @@ int tiler_update(Window *win,List *updateList)
 void custom_input_handler()
 {
     int adjx,adjy;
+    if(mouse_button_held(0))
+    {
+        Vector2D pos = mouse_get_position();
+        slog("%f:%f",pos.x,pos.y);
+        adjx = ((int)pos.x) / 60;
+        adjy = ((int)pos.y) / 60;
+        slog("%d:%d",adjx,adjy);
+        gf2d_draw_rect(shape_rect_to_sdl_rect(shape_rect_from_vector4d(vector4d(adjx*60,adjy*60,60,60))),vector4d(0,0,255,255));
+    }
     if(mouse_button_pressed(2))
     {
         if(tiler)
@@ -107,6 +126,7 @@ void custom_input_handler()
     }
     if(return_code==1)
     {
+        memset(text,0,255);
         int done = 0;
         SDL_StartTextInput();
         while (!done) {
@@ -120,17 +140,22 @@ void custom_input_handler()
                             case SDLK_RETURN:
                                 done = 1;
                                 break;
+                            case SDLK_BACKSPACE:
+                                remove_char(text);
+                                break;
                         }
                     case SDL_TEXTINPUT:
-                        /* Add new text onto the end of our text */
-                        strcat(text, event.text.text);
+                        for(int i=0; i<SDL_TEXTINPUTEVENT_TEXT_SIZE; ++i)
+                            {
+                                char c = event.text.text[i];
+                                // cancel if a non-ascii char is encountered
+                                if(c < ' ' || c > '~')
+                                    break;
+
+                                append(text,c);
+                            }
                         break;
                     case SDL_TEXTEDITING:
-                        /*
-                        Update the composition text.
-                        Update the cursor position.
-                        Update the selection length (if any).
-                        */
                         composition = event.edit.text;
                         cursor = event.edit.start;
                         selection_len = event.edit.length;
@@ -139,6 +164,8 @@ void custom_input_handler()
             }
         SDL_PumpEvents();
         gf2d_graphics_clear_screen();
+        mouse_update();
+        mouse_draw();
         window_update(other);
         window_draw(other);
         gf2d_grahics_next_frame();
@@ -150,10 +177,13 @@ void custom_input_handler()
             List *tmp = ((ListElement *) j->data)->list;
             title = ((Element*)gfc_list_get_nth(tmp,0))->data;
         }
+        memset(title->text,0,strlen(title->text));
         strncpy(title->text,text,strlen(text));
-        puts(title->text);
+//         for(int i = 0; i < strlen(title->text) ; i++)
+//         {
+//             slog("%d",title->text[i]);
+//         }
         }
-
         return_code = 0;
     }
     return;
@@ -226,14 +256,12 @@ void edit_game()
         gf2d_graphics_clear_screen();
         keys = SDL_GetKeyboardState(NULL);
         mouse_update();
-        custom_input_handler();
         windows_update_all();
         tilemap_draw(t);
         entity_manager_think_all();
         entity_manager_draw_all();
         windows_draw_all();
-//         SDL_Delay(200);
-
+        custom_input_handler();
         mouse_draw();
         gf2d_grahics_next_frame();
         if (keys[SDL_SCANCODE_ESCAPE])
