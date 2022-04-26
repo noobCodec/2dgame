@@ -1,0 +1,67 @@
+
+{
+"window":{
+    "color" : [255,255,255, 255],
+    "dimensions" : [200,200,220,60],
+    "elements":
+    [
+        {
+        "type": "list",
+        "name": "continue",
+        "id" : 20,
+        "bounds": [0,10,780,32],
+        "color" : [255,255,255,255],
+        "style": "horizontal",
+        "item_size" : [110,48],
+        "elements":
+        [
+            {
+                    "type": "label",
+                    "name": "Continue",
+                    "id" : 521,
+                    "bounds": [0,0,105,45],
+                    "color" : [0,0,0,255],
+                    "text":"Start Typing",
+                    "align": "middle",
+                    "justify" : "center",
+                    "style":"H1"
+            },
+            {
+                "type": "button",
+                "name": "restart",
+                "id" : 61,
+                "bounds": [0,0,105,45],
+                "color" : [255,255,255,255],
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "Continue",
+                    "id" : 521,
+                    "bounds": [0,0,105,45],
+                    "color" : [255,255,255,255],
+                    "text":"Submit",
+                    "align": "middle",
+                    "justify" : "center",
+                    "style":"H1"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 522,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "level/button.json"
+                    }
+            }
+        ]
+        }
+    ]
+    }
+}
+
+
+
+

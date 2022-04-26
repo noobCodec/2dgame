@@ -33,6 +33,7 @@
 #include "element_button.h"
 #include "hud.h"
 #include "princess.h"
+#include "editor.h"
 static int enabled = 0;
 static int done = 0;
 static int dirty = 0;
@@ -71,10 +72,8 @@ void welcome_menu_update(Window *win,List *updateList)
         {
             case 63:
             	done = 1;
-                slog("ok");
                 break;
             case 52:
-                slog("cancel");
                 save_game();
                 break;
             case 61:
@@ -131,6 +130,12 @@ void main_menu_update(Window *win,List *updateList)
                 entity_manager_clear();
                 dirty = 1;
                 load_game("saves/save.json");
+            case 65:
+                game_manager_clear();
+                entity_manager_clear();
+                win->active = 0;
+                edit_game();
+
 
         }
     }
@@ -195,7 +200,7 @@ int main(int argc, char * argv[])
     gem_action_list_init(128);
     SDL_ShowCursor(SDL_DISABLE);
     mouse_load("level/mouse.json");
-    tilemap = tilemap_load("level/test.json");
+    tilemap = tilemap_load("level/new_tile.json");
 	Path_Map *path = Path_Map_load("level/xd.json");
 	set_path(path->path,path->pathmap_width,path->pathmap_length);
 	font_init(40);
@@ -210,7 +215,7 @@ int main(int argc, char * argv[])
     camera_set_position(vector2d(0,0));
     init_hud("level/hudcp.json");
 // 	opponent_init(opp,player);
-    trigger_ent_new(vector2d(180,90),"json/editor/leveleditor.json");
+//     trigger_ent_new(vector2d(180,90),"json/editor/editortext.json");
 	Window *win = main_menu();
 //     welcome_menu();
     while(!done)
