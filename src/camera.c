@@ -9,7 +9,7 @@ void camera_set_dimensions(Vector2D size)
 {
     Camera.w = size.x;
     Camera.h = size.y;
-//     SDL_RenderSetLogicalSize(gf2d_graphics_get_renderer(),size.x,size.y);
+    SDL_RenderSetLogicalSize(gf2d_graphics_get_renderer(),size.x,size.y);
 }
 
 Vector2D camera_get_dimensions()

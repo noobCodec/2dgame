@@ -59,15 +59,6 @@ void welcome_menu_update(Window *win,List *updateList)
     {
         slog("UPDATE");
         e = gfc_list_get_nth(updateList,i);
-//         if (!e)continue;
-//         if(e->type == ET_BUTTON)
-//         {
-//             here = (ButtonElement *)e;
-//             j = (LabelElement *)here->label;
-//             here->label = NULL;
-//             here->style = ES_HIDDEN;
-//             slog("updated");
-//         }
         switch(e->index)
         {
             case 63:
@@ -188,8 +179,8 @@ int main(int argc, char * argv[])
         "gf2d",
         1200,
         720,
-        1200,
-        720,
+        2560,
+        1440,
         vector4d(0,0,0,255),
         0);
     gf2d_graphics_set_frame_delay(16); // 60 fps = 16 ms delay
@@ -203,6 +194,7 @@ int main(int argc, char * argv[])
     tilemap = tilemap_load("level/new_tile.json");
 	Path_Map *path = Path_Map_load("level/xd.json");
 	set_path(path->path,path->pathmap_width,path->pathmap_length);
+    princess_ent_new(vector2d(500,200));
 	font_init(40);
 	populate_fonts("level/font.json");
 	windows_init(40);

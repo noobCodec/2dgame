@@ -202,18 +202,18 @@ List* check_inputs()
 									}
 								}
                         break;
-                    case SDLK_l:
-                        camera_move(vector2d(60,0));
-                        break;
-                    case SDLK_u:
-                        camera_move(vector2d(-60,0));
-                        break;
-                    case SDLK_j:
-                        camera_move(vector2d(0,60));
-                        break;
-                    case SDLK_k:
-                        camera_move(vector2d(0,-60));
-                        break;
+//                     case SDLK_l:
+//                         camera_move(vector2d(60,0));
+//                         break;
+//                     case SDLK_u:
+//                         camera_move(vector2d(-60,0));
+//                         break;
+//                     case SDLK_j:
+//                         camera_move(vector2d(0,60));
+//                         break;
+//                     case SDLK_k:
+//                         camera_move(vector2d(0,-60));
+//                         break;
 				}
 		    }
 //             if(event.type==SDL_MOUSEWHEEL)

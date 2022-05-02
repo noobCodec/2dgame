@@ -89,26 +89,39 @@ int tiler_update(Window *win,List *updateList)
     }
     return 1;
 }
-void custom_input_handler()
+SJson *modifyTile(SJson *file, int i, int j, int tile)
+{
+    if(file == NULL) return NULL;
+    SJson *arr = sj_object_get_value(file,"tile_map");
+    SJson *other_arr = sj_array_get_nth(arr,i);
+    sj_list_delete_nth(other_arr,j);
+    sj_list_insert(other_arr,sj_new_int(tile),j);
+    sj_save(file, "level/test.json");
+    return file;
+}
+void custom_input_handler(TileMap *t,SJson *local)
 {
     int adjx,adjy;
     if(mouse_button_held(0))
     {
         Vector2D pos = mouse_get_position();
-        slog("%f:%f",pos.x,pos.y);
         adjx = ((int)pos.x) / 60;
         adjy = ((int)pos.y) / 60;
-        slog("%d:%d",adjx,adjy);
+        modifyTile(local,3,3,2);
         gf2d_draw_rect(shape_rect_to_sdl_rect(shape_rect_from_vector4d(vector4d(adjx*60,adjy*60,60,60))),vector4d(0,0,255,255));
+    }
+    if(mouse_button_held(1))
+    {
+        Vector2D pos = mouse_get_position();
+        camera_move(pos);
+
+
     }
     if(mouse_button_pressed(2))
     {
         if(tiler)
             window_free(tiler);
         Vector2D pos = mouse_get_position();
-        adjx = (int)pos.x % 60;
-        adjy = (int)pos.y % 60;
-        slog("%f:%f\n",pos.x,pos.y);
         SJson *sj = sj_load("json/editor/tileeditor.json");
         if(!sj)return;
         Window *window = window_load_from_json(sj);
@@ -164,6 +177,7 @@ void custom_input_handler()
             }
         SDL_PumpEvents();
         gf2d_graphics_clear_screen();
+        tilemap_draw(t);
         mouse_update();
         mouse_draw();
         window_update(other);
@@ -179,15 +193,10 @@ void custom_input_handler()
         }
         memset(title->text,0,strlen(title->text));
         strncpy(title->text,text,strlen(text));
-//         for(int i = 0; i < strlen(title->text) ; i++)
-//         {
-//             slog("%d",title->text[i]);
-//         }
         }
         return_code = 0;
     }
     return;
-// 	while(SDL_PollEvent(&event))
 }
 void re_label_editor(Element *e, char *text)
 {
@@ -197,7 +206,7 @@ void re_label_editor(Element *e, char *text)
 
 
 }
-void empty_arr(int x, int y, char *out)
+SJson *empty_arr(int x, int y, char *out)
 {
     SJson *ptr = sj_object_new();
     sj_object_insert(ptr,"tileset",sj_new_str("images/tileset_3.png"));
@@ -214,9 +223,7 @@ void empty_arr(int x, int y, char *out)
     }
     sj_object_insert(ptr,"tile_map",str);
     sj_save(ptr,"level/test.json");
-    return;
-
-
+    return ptr;
 }
 int editor_update(Window *win,List *updateList)
 {
@@ -248,7 +255,10 @@ void edit_game()
     if(!sj)return;
     Window *window = window_load_from_json(sj);
     window->update = editor_update;
-    empty_arr(12,20,"level/test.json");
+    SJson *local = empty_arr(12,20,"level/test.json");
+    modifyTile(local,3,3,3);
+    modifyTile(local,3,4,2);
+    modifyTile(local,3,3,3);
     TileMap *t = tilemap_load("level/test.json");
     while(!finished)
     {
@@ -261,7 +271,9 @@ void edit_game()
         entity_manager_think_all();
         entity_manager_draw_all();
         windows_draw_all();
-        custom_input_handler();
+//         tilemap_free(t);
+//         t = tilemap_load("level/test.json");
+        custom_input_handler(t,local);
         mouse_draw();
         gf2d_grahics_next_frame();
         if (keys[SDL_SCANCODE_ESCAPE])
