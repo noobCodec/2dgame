@@ -117,6 +117,10 @@ void goblin_draw(Entity *self)
 	{
 		self->actor->color = vector4d(255,0,24,200);
 	}
+	if(self->team == 255)
+	{
+		self->actor->color = vector4d(255,155,155,255);
+	}
 	gem_actor_draw(self->actor,self->position,NULL,NULL,&self->rotation,&self->flip);
 	gem_actor_next_frame(self->actor);
 
@@ -133,6 +137,7 @@ Entity *goblin_ent_new(Vector2D position,int fire_range)
     }
     gem_actor_load(tmp,"actors/goblin.json");
     ent->think = goblin_think;
+    ent->team = 255;
     ent->actor = tmp;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);
     ent->draw_scale = vector2d(1,1);
@@ -141,7 +146,7 @@ Entity *goblin_ent_new(Vector2D position,int fire_range)
     ent->draw_offset.y = -16;
     ent->rotation.x = 16;
     ent->rotation.y = 16;
-    ent->damage = 5;
+    ent->damage = 5000;
     ent->flip.x = 0;
     ent->flip.y = 0;
     ent->health = 50;

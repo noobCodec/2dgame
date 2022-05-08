@@ -189,6 +189,18 @@ List* resources()
     }
     return nodes;
 }
+List* all_ents()
+{
+	List *nodes = gfc_list_new(4);
+    int i;
+    for (i = 0;i < entity_manager.max_entities;i++)
+    {
+        Entity* other = &entity_manager.entity_list[i];
+        if(other && other->_inuse && other->team != 0 && other->team != 1)
+            gfc_list_append(nodes,other);
+    }
+    return nodes;
+}
 Entity* heal(Entity *self)
 {
 	float dist = 9999;
@@ -249,7 +261,7 @@ Entity* overlap(Entity *ent)
         if(ent->team != other->team && ent != other && shape_rect_circle_collision(ent->range,other->bounding))
         {
 			ret = &entity_manager.entity_list[i]; 
-        	if(other->immune==0)
+        	if(other->immune==0 && other->id != 20)
         	{
         		return &entity_manager.entity_list[i];
         	}

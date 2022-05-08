@@ -1,8 +1,10 @@
 #include "princess.h"
 #include "warrior.h"
 #include "element_button.h"
+#include "game_instance.h"
 #include <SDL.h>
 #include "simple_logger.h"
+#include "shirt.h"
 
 static int access_code = 0;
 void princess_label(Element *e, char *text)
@@ -10,8 +12,40 @@ void princess_label(Element *e, char *text)
     if(!e) return;
     LabelElement *j = ((LabelElement*)((ButtonElement*)e->data)->label->data);
     strncpy(j->text,text,strlen(j->text));
-
-
+}
+void princess_end_update(Window *win,List *updateList)
+{
+    int i,count;
+    Element *e;
+    ButtonElement *here;
+    LabelElement *j;
+    if (!win)return 0;
+    if (!updateList)return 0;
+    count = gfc_list_get_count(updateList);
+    for (i = 0; i < count; i++)
+    {
+        e = gfc_list_get_nth(updateList,i);
+        switch(e->index)
+        {
+            case 61:
+            	window_free(win);
+                break;
+        }
+    }
+}
+Window* princess_end_menu()
+{
+    Window *win;
+    SJson *json = NULL;
+    json = sj_load("json/menus/end_menu.json");
+    win = window_load_from_json(json);
+    win->active = 1;
+    if (win)
+    {
+        win->update = princess_end_update;
+    }
+    sj_free(json);
+    return win;
 }
 static int updates = 0;
 static int choice = 0;
@@ -24,7 +58,7 @@ int princess_update(Window *win,List *updateList)
     LabelElement *princess;
     Element *option1,*option2;
     Element *other_option;
-
+    Window *end = NULL;
     if (!win)return 0;
     if (!updateList)return 0;
     count = gfc_list_get_count(updateList);
@@ -56,10 +90,12 @@ int princess_update(Window *win,List *updateList)
                     choice = 0;
                     break;
                 //DIE
+
                 case 62:
                     strncpy(princess->text,"NOOOOOOOOOOO",strlen(princess->text));
                     re_label(option1,"EXIT");
                     re_label(e,"EXIT");
+                    get_game(0)->resources -= 50;
                     choice = 1;
                     break;
             }
@@ -71,20 +107,31 @@ int princess_update(Window *win,List *updateList)
             {
                 case 61:
                     window_free(win);
+
+                    get_game(0)->resources += 50;
                     access_code = 1;
+                    shirt_ent_new(vector2d(900,300));
+                    princess_end_menu();
                     return 1;
                     break;
                 case 62:
-                    re_label(e,"NO");
+                    Entity *tmp = warrior_ent_new(vector2d(50,50),40);
+                    tmp->team = 0;
+                    access_code = 1;
+                    window_free(win);
+                    shirt_ent_new(vector2d(900,300));
+                    princess_end_menu();
+                    return 1;
                     break;
             }
             }
             else
             {
+                princess_end_menu();
+                shirt_ent_new(vector2d(900,300));
                 window_free(win);
                 access_code = 1;
                 return 1;
-
             }
             break;
         }
@@ -133,7 +180,8 @@ Entity *princess_ent_new(Vector2D position)
     }
     //ent->elapsed = SDL_GetTicks();
     ent->old_health = 1000;
-    ent->team = 244;
+    ent->team = 255;
+    ent->id = 8;
     ent->sprite = gf2d_sprite_load_image("images/princess.png");
     //ent->think = crystal_think;
     //ent->range = shape_circle(position.x,position.y,fire_range);
@@ -143,7 +191,7 @@ Entity *princess_ent_new(Vector2D position)
     ent->think = princess_think;
     List *guards = gfc_list_new();
     Entity *bodyguard = warrior_ent_new(vector2d(position.x+20,position.y),30);
-    bodyguard->team = 244;
+    bodyguard->team = 255;
     gfc_list_append(guards,bodyguard);
     ent->guards = guards;
     ent->draw_offset.x = -16;

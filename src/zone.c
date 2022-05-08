@@ -45,6 +45,7 @@ Entity *new_fast_zone(Vector2D position,int size)
     ent->team = 255;
     ent->think = zone_think;
     ent->type = 1;
+    ent->id = 20;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,size,size));
     ent->enemy = NULL;
     vector2d_copy(ent->position,position);
@@ -62,6 +63,7 @@ Entity *new_slow_zone(Vector2D position,int size)
     }
     ent->type = 2;
     ent->team = 255;
+    ent->id = 20;
     ent->think = zone_think;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,size,size));
     ent->enemy = NULL;
@@ -79,6 +81,7 @@ Entity *new_heal_zone(Vector2D position,int size)
     }
     ent->type = 3;
     ent->team = 255;
+    ent->id = 20;
     ent->think = zone_think;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,size,size));
     ent->enemy = NULL;
@@ -95,6 +98,7 @@ Entity *new_damage_zone(Vector2D position,int size)
         return NULL;
     }
     ent->type = 4;
+    ent->id = 20;
     ent->team = 255;
     ent->think = zone_think;
     ent->bounding = shape_rect_from_vector4d(vector4d(position.x,position.y,size,size));

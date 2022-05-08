@@ -99,6 +99,6 @@ List* resources();
 void apply_upgrade(int id);
 List* touch(Entity *self);
 Entity* heal(Entity *self);
-
+List* all_ents();
 
 #endif

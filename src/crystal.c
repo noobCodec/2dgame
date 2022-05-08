@@ -14,7 +14,8 @@ void crystal_think(Entity *self)
 	{
 		game_instance *tmp = get_game(self->inflict);
 		//slog("%d",tmp->resources);
-		tmp->resources += self->old_health-self->health;
+        if(tmp)
+            tmp->resources += self->old_health-self->health;
 	}
 	self->old_health = self->health;
 }
@@ -36,6 +37,7 @@ Entity *crystal_ent_new(Vector2D position)
     //ent->range = shape_circle(position.x,position.y,fire_range);
     ent->draw_scale = vector2d(0.2,0.2);
     ent->velocity = vector2d(0,0);
+    ent->id = 7;
     ent->draw_offset.x = -16;
     ent->draw_offset.y = -16;
     ent->rotation.x = 64;

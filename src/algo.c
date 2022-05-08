@@ -133,7 +133,7 @@ int heuristic(int row, int col, int goal_row,int goal_col)
 {
 	int x = goal_row - row;
 	int y = goal_col - col;
-	return sqrt(x*x + y*y);
+	return abs(x) + abs(y);
 }
 List* BFS(int *grid,int row,int col,int goal_row, int goal_col,int col_size,int row_size)
 {
@@ -158,7 +158,7 @@ List* BFS(int *grid,int row,int col,int goal_row, int goal_col,int col_size,int 
 		int y = cell->y;
 		if(x == goal_row && y == goal_col)
 		{
-/*		debug(visited,col_size,row_size);*/
+// 		debug(visited,col_size,row_size);
 			List *done = backtrack(cell);
 			while(!isEmpty(&pq)) pop(&pq);
 			for(int i =0; i<gfc_list_get_count(tobefreed);i++)
@@ -180,7 +180,7 @@ List* BFS(int *grid,int row,int col,int goal_row, int goal_col,int col_size,int 
 				ptr = init_cost_point(xcoord,ycoord,new_cost);
 				tobefreed=gfc_list_append(tobefreed,ptr);
 				ptr->prev = cell;
-				push(&pq,ptr,heuristic(goal_row,goal_col,xcoord,ycoord));
+				push(&pq,ptr,new_cost+heuristic(goal_row,goal_col,xcoord,ycoord));
 				visited[xcoord*col_size+ycoord] = new_cost;
 			}
 		}

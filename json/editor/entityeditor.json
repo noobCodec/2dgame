@@ -1,0 +1,324 @@
+
+{
+"window":{
+    "color" : [255,255,255, 255],
+    "dimensions" : [0,0,380,80],
+    "elements":
+    [
+      {
+        "type": "list",
+        "name": "list",
+        "id" : 0,
+        "bounds": [10,24,400,220],
+        "color" : [255,255,255,255],
+        "style": "vertical",
+        "item_size" : [100,32],
+        "elements":
+        [
+            {
+            "type": "list",
+            "name": "continue",
+            "id" : 20,
+            "bounds": [-15,-15,780,32],
+            "color" : [255,255,255,255],
+            "style": "horizontal",
+            "item_size" : [75,48],
+            "elements":
+            [
+                {
+					"type": "button",
+					"name": "restart",
+					"id" : 40,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Goblin",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				},
+
+				{
+					"type": "button",
+					"name": "restart",
+					"id" : 41,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Ranger",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				},
+				{
+					"type": "button",
+					"name": "restart",
+					"id" : 42,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Warrior",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				},
+				{
+					"type": "button",
+					"name": "restart",
+					"id" : 43,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Mage",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				},
+				{
+					"type": "button",
+					"name": "restart",
+					"id" : 44,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Rogue",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				}
+            ]
+            },
+            {
+            "type": "list",
+            "name": "continue",
+            "id" : 20,
+            "bounds": [-15,-15,780,32],
+            "color" : [255,255,255,255],
+            "style": "horizontal",
+            "item_size" : [75,48],
+            "elements":
+            [
+                {
+					"type": "button",
+					"name": "restart",
+					"id" : 48,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Tent",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				},
+                {
+					"type": "button",
+					"name": "restart",
+					"id" : 45,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Shirt",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				},
+				{
+					"type": "button",
+					"name": "restart",
+					"id" : 46,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Princess",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				},
+				{
+					"type": "button",
+					"name": "restart",
+					"id" : 47,
+					"bounds": [0,0,75,30],
+					"color" : [255,255,255,255],
+					"highColor" : [255,255,255,255],
+					"pressColor" : [255,255,255,255],
+					"label" :
+						{
+						"type": "label",
+						"name": "Continue",
+						"id" : 521,
+						"bounds": [0,0,75,30],
+						"color" : [255,255,255,255],
+						"text":"Crystal",
+						"align": "middle",
+						"justify" : "center",
+						"style":"normal"
+						},
+					"actor" :
+						{
+						"type": "actor",
+						"name": "image",
+						"id" : 522,
+						"bounds": [0,0,168,64],
+						"color" : [255,255,255,255],
+						"actor" : "json/actors/button_small.json"
+						}
+				}
+
+
+            ]
+            }
+
+        ]
+    }
+    ]
+    }
+}
+
+
+
+

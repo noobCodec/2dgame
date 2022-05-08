@@ -119,6 +119,10 @@ void mage_draw(Entity *self)
 	{
 		self->actor->color = vector4d(255,0,24,200);
 	}
+	if(self->team == 255)
+	{
+		self->actor->color = vector4d(255,155,155,255);
+	}
 	gem_actor_draw(self->actor,self->position,NULL,NULL,&self->rotation,&self->flip);
 	gem_actor_next_frame(self->actor);
 
@@ -136,6 +140,7 @@ Entity *mage_ent_new(Vector2D position,int fire_range)
     gem_actor_load(tmp,"actors/mage.json");
         ent->think = mage_think;
     ent->actor = tmp;
+    ent->team = 255;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);
     ent->draw_scale = vector2d(1,1);
     ent->velocity = vector2d(0,0);

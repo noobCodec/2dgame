@@ -37,10 +37,15 @@ void rogue_think(Entity *self)
 		self->velocity = vector2d(0,0);
 		self->path = NULL;
 		}
-		Path *pat = path_new();
 		Entity *closest_heal = heal(self);
+
+
+        if(closest_heal)
+        {
+        Path *pat = path_new();
 		path_find(pat,closest_heal->position.x,closest_heal->position.y,self->position.x,self->position.y);
 		self->path = pat;
+        }
 	}
 	//gf2d_draw_pixel(self->position,vector4d(0,255,255,255));
     //slog("%d",self->team);
@@ -135,6 +140,10 @@ void rogue_draw(Entity *self)
 	{
 		self->actor->color = vector4d(255,0,24,200);
 	}
+	if(self->team == 255)
+	{
+		self->actor->color = vector4d(255,155,155,255);
+	}
 	gem_actor_draw(self->actor,self->position,NULL,NULL,&self->rotation,&self->flip);
 	gem_actor_next_frame(self->actor);
 
@@ -152,6 +161,7 @@ Entity *rogue_ent_new(Vector2D position,int fire_range)
     gem_actor_load(tmp,"actors/rogue.json");
         ent->think = rogue_think;
     ent->actor = tmp;
+    ent->team = 255;
     ent->range = shape_circle(position.x+16,position.y+16,fire_range);
     ent->draw_scale = vector2d(1,1);
     ent->velocity = vector2d(0,0);
@@ -159,7 +169,7 @@ Entity *rogue_ent_new(Vector2D position,int fire_range)
     ent->draw_offset.y = -16;
     ent->rotation.x = 16;
     ent->rotation.y = 16;
-    ent->damage = 50;
+    ent->damage = 45;
     ent->flip.x = 0;
     ent->flip.y = 0;
     ent->health = 200;
